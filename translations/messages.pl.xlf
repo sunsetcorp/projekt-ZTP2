@@ -1,0 +1,564 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="label.actions">
+        <source>label.actions</source>
+        <target>Działania</target>
+      </trans-unit>
+
+                  <trans-unit id="message.successfullyrated">
+                    <source>message.successfullyrated</source>
+                    <target>Oceniono pozycję z powodzeniem.</target>
+                  </trans-unit>
+            <trans-unit id="label.editcover">
+              <source>label.editcover</source>
+              <target>Edytuj okładkę</target>
+            </trans-unit>
+            <trans-unit id="label.genre">
+              <source>label.genre</source>
+              <target>Gatunek</target>
+            </trans-unit>
+             <trans-unit id="label.artist">
+               <source>label.artist</source>
+               <target>Wykonawca</target>
+             </trans-unit>
+            <trans-unit id="label.releaseDate">
+              <source>label.releaseDate</source>
+              <target>Data wydania</target>
+            </trans-unit>
+                        <trans-unit id="album.genre">
+                          <source>album.genre</source>
+                          <target>Gatunek</target>
+                        </trans-unit>
+                         <trans-unit id="album.artist">
+                           <source>album.artist</source>
+                           <target>Wykonawca</target>
+                         </trans-unit>
+                        <trans-unit id="album.releaseDate">
+                          <source>album.releaseDate</source>
+                          <target>Dzień wydania</target>
+                        </trans-unit>
+                        <trans-unit id="album.title">
+                                                  <source>album.title</source>
+                                                  <target>Tytuł</target>
+                                                </trans-unit>
+                        <trans-unit id='label.album_list'>
+                          <source>label.album_list</source>
+                          <target>Katalog muzyki</target>
+                        </trans-unit>
+      <trans-unit id="label.id">
+        <source>label.id</source>
+        <target>ID</target>
+      </trans-unit>
+       <trans-unit id="album.category">
+              <source>album.category</source>
+              <target>Kategoria</target>
+            </trans-unit>
+             <trans-unit id="label.category">
+                    <source>label.category</source>
+                    <target>Kategoria</target>
+                  </trans-unit>
+      <trans-unit id="label.title">
+        <source>label.title</source>
+        <target>Tytuł</target>
+      </trans-unit>
+      <trans-unit id="label.content">
+        <source>label.content</source>
+        <target>Treść</target>
+      </trans-unit>
+      <trans-unit id="label.tags">
+        <source>label.tags</source>
+        <target>Tagi</target>
+      </trans-unit>
+      <trans-unit id="message.empty_list">
+        <source>message.empty_list</source>
+        <target>Lista jest pusta.</target>
+      </trans-unit>
+      <trans-unit id="message.record_not_found">
+        <source>message.record_not_found</source>
+        <target>Nie znaleziono.</target>
+      </trans-unit>
+      <trans-unit id="title.album_list">
+        <source>title.album_list</source>
+        <target>Katalog albumów</target>
+      </trans-unit>
+      <trans-unit id="action.view">
+        <source>action.view</source>
+        <target>Wyświetl</target>
+      </trans-unit>
+                 <trans-unit id='title.album_details'>
+                    <source>title.album_details</source>
+                    <target>Szczegóły albumu</target>
+                  </trans-unit>
+                                      <trans-unit id="label.avg">
+                                          <source>label.avg</source>
+                                          <target>Średnia ocena</target>
+                                      </trans-unit>
+
+                                                                                   <trans-unit id="title.rate">
+                                                                                      <source>title.rate</source>
+                                                                                      <target>Oceń wydawnictwo</target>
+                                                                                  </trans-unit>
+           <trans-unit id='action.back_to_album_list'>
+              <source>action.back_to_album_list</source>
+              <target>Wróć do listy albumów</target>
+            </trans-unit>
+                   <trans-unit id='action.back_to_genre_list'>
+                          <source>action.back_to_genre_list</source>
+                          <target>Wróć do listy kategorii</target>
+                        </trans-unit>
+            <trans-unit id="label.cover">
+              <source>label.cover</source>
+              <target>Okładka</target>
+            </trans-unit>
+                 <trans-unit id="action.search">
+                   <source>action.search</source>
+                   <target>Szukaj</target>
+                 </trans-unit>
+                             <trans-unit id="label.placeholdersearch">
+                               <source>label.placeholdersearch</source>
+                               <target>Wyszukaj album, artystę lub tag</target>
+                             </trans-unit>
+                                              <trans-unit id="button.uploadalbum">
+                                                  <source>button.uploadalbum</source>
+                                                  <target>Dodaj okładkę</target>
+                                              </trans-unit>
+
+                                                                                           <trans-unit id="label.addcover">
+                                                                                               <source>label.addcover</source>
+                                                                                               <target>Dodaj okładkę</target>
+                                                                                           </trans-unit>
+<trans-unit id="label.comment">
+        <source>label.comment</source>
+        <target>Treść:</target>
+      </trans-unit>
+                  <trans-unit id="message.enteremail">
+                      <source>message.enteremail</source>
+                      <target>Wpisz email</target>
+                  </trans-unit>
+
+    <trans-unit id="message.enterusername">
+        <source>message.enterusername</source>
+        <target>Wpisz username</target>
+    </trans-unit>
+
+
+        <trans-unit id="message.enterpasswd">
+            <source>message.enterpasswd</source>
+            <target>Wpisz hasło</target>
+        </trans-unit>
+
+
+
+            <trans-unit id="message.created_successfully">
+                <source>message.created_successfully</source>
+                <target>Stworzono z powodzeniem.</target>
+            </trans-unit>
+
+           <trans-unit id="message.no_albums_with_tag">
+               <source>message.no_albums_with_tag</source>
+               <target>Nie ma albumów z tagiem.</target>
+           </trans-unit>
+
+     <trans-unit id="message.edited_successfully">
+         <source>message.edited_successfully</source>
+         <target>Edycja powiodła się.</target>
+     </trans-unit>
+
+          <trans-unit id="message.deleted_successfully">
+              <source>message.deleted_successfully</source>
+              <target>Usunięcie powiodło się.</target>
+          </trans-unit>
+
+             <trans-unit id="message.category_contains_tasks">
+                 <source>message.category_contains_tasks</source>
+                 <target>W kategorii są albumy. </target>
+             </trans-unit>
+
+   <trans-unit id="message.updated_successfully">
+       <source>message.updated_successfully</source>
+       <target>Zaktualizowano z powodzeniem.</target>
+   </trans-unit>
+
+      <trans-unit id="message.tag_contains_tasks">
+          <source>message.tag_contains_tasks</source>
+          <target>W tagu są albumy.</target>
+      </trans-unit>
+
+      <trans-unit id="title.albums_with_tag ">
+          <source>title.albums_with_tag</source>
+          <target>Albumy z tagiem</target>
+      </trans-unit>
+
+        <trans-unit id="title.album.create  ">
+            <source>title.album.create</source>
+            <target>Dodaj album</target>
+        </trans-unit>
+
+    <trans-unit id="action.save">
+        <source>action.save</source>
+        <target>Zapisz</target>
+    </trans-unit>
+
+        <trans-unit id="title.album_delete">
+            <source>title.album_delete</source>
+            <target>Usuń album</target>
+        </trans-unit>
+
+            <trans-unit id="action.delete">
+                <source>action.delete</source>
+                <target>Usuń</target>
+            </trans-unit>
+
+                <trans-unit id="title.album_edit">
+                    <source>title.album_edit</source>
+                    <target>Edytuj album</target>
+                </trans-unit>
+
+        <trans-unit id="action.edit">
+            <source>action.edit</source>
+            <target>Edytuj</target>
+        </trans-unit>
+        <trans-unit id="action.editcover">
+            <source>action.editcover</source>
+            <target>Edytuj okładkę</target>
+        </trans-unit>
+            <trans-unit id="action.create">
+                <source>action.create</source>
+                <target>Stwórz</target>
+            </trans-unit>
+
+                <trans-unit id="label.author">
+                    <source>label.author</source>
+                    <target>Autor</target>
+                </trans-unit>
+
+                    <trans-unit id="label.none">
+                        <source>label.none</source>
+                        <target>Brak</target>
+                    </trans-unit>
+
+           <trans-unit id="label.removeFav">
+               <source>label.removeFav</source>
+               <target>Usuń z ulubionych</target>
+           </trans-unit>
+
+               <trans-unit id="label.addFav">
+                   <source>label.addFav</source>
+                   <target>Dodaj do ulubionych</target>
+               </trans-unit>
+
+                   <trans-unit id="title.add_comment">
+                       <source>title.add_comment</source>
+                       <target>Dodaj komentarz</target>
+                   </trans-unit>
+
+                       <trans-unit id="action.add_comment">
+                           <source>action.add_comment</source>
+                           <target>Dodaj komentarz</target>
+                       </trans-unit>
+           <trans-unit id="title.comments">
+               <source>title.comments</source>
+               <target>Komentarze</target>
+           </trans-unit>
+
+               <trans-unit id="message.no_comments">
+                   <source>message.no_comments</source>
+                   <target>Brak komentarzy.</target>
+               </trans-unit>
+
+                   <trans-unit id="action.back_to_list">
+                       <source>action.back_to_list</source>
+                       <target>Wróć do listy</target>
+                   </trans-unit>
+
+                       <trans-unit id="message.album_not_found">
+                           <source>message.album_not_found</source>
+                           <target>Nie znaleziono albumu</target>
+                       </trans-unit>
+
+               <trans-unit id="title.category_create">
+                   <source>title.category_create</source>
+                   <target>Stwórz kategorię</target>
+               </trans-unit>
+
+                   <trans-unit id=" title.category_delete">
+                       <source>title.category_delete</source>
+                       <target>Usuń kategorię</target>
+                   </trans-unit>
+
+                       <trans-unit id="title.category_edit">
+                           <source>title.category_edit</source>
+                           <target>Edytuj kategorię</target>
+                       </trans-unit>
+
+                           <trans-unit id="title.category_list">
+                               <source>title.category_list</source>
+                               <target>Lista kategorii</target>
+                           </trans-unit>
+               <trans-unit id="title.category_details">
+                   <source>title.category_details</source>
+                   <target>Szczegóły kategorii</target>
+               </trans-unit>
+
+                   <trans-unit id="label.createdAt">
+                       <source>label.createdAt</source>
+                       <target>Stworzono</target>
+                   </trans-unit>
+
+                       <trans-unit id="label.updatedAt">
+                           <source>label.updatedAt</source>
+                           <target>Zaktualizowano</target>
+                       </trans-unit>
+
+                           <trans-unit id="title.albums_in_category">
+                               <source>title.albums_in_category</source>
+                               <target>Albumy w kategorii</target>
+                           </trans-unit>
+
+
+                            <trans-unit id="message.no_albums_in_category">
+                                <source>message.no_albums_in_category</source>
+                                <target>Brak albumów w kategorii</target>
+                            </trans-unit>
+
+                   <trans-unit id="action.back_to_category_list">
+                       <source>action.back_to_category_list</source>
+                       <target>Wróć do listy kategorii</target>
+                   </trans-unit>
+
+                       <trans-unit id="message.category_not_found">
+                           <source>message.category_not_found</source>
+                           <target>Nie znaleziono kategorii</target>
+                       </trans-unit>
+
+                           <trans-unit id="message.form_error">
+                               <source>message.form_error</source>
+                               <target>Błąd formularza</target>
+                           </trans-unit>
+
+                          <trans-unit id="message.admin_error">
+                              <source>message.admin_error</source>
+                              <target>Musi istnieć co najmniej jeden administrator.</target>
+                          </trans-unit>
+
+                               <trans-unit id="title.tag_create">
+                                   <source>title.tag_create</source>
+                                   <target>Stwórz tag</target>
+                               </trans-unit>
+                   <trans-unit id="title.tag_delete">
+                       <source>title.tag_delete</source>
+                       <target>Usuń tag</target>
+                   </trans-unit>
+                                      <trans-unit id="message.blocked">
+                                          <source>message.blocked</source>
+                                          <target>Użytkownik został zablokowany.</target>
+                                      </trans-unit>
+                     <trans-unit id="message.unblocked">
+                         <source>message.unblocked</source>
+                         <target>Użytkownik został odblokowany.</target>
+                     </trans-unit>
+                       <trans-unit id="title.tag_edit">
+                           <source>title.tag_edit</source>
+                           <target>Edytuj tag</target>
+                       </trans-unit>
+                       <trans-unit id="action.block">
+                           <source>action.block</source>
+                           <target>Zablokuj</target>
+                       </trans-unit>
+                                               <trans-unit id="message.cantblock">
+                                                                     <source>message.cantblock</source>
+                                                                     <target>Nie możesz zablokować samego siebie.</target>
+                                                                 </trans-unit>
+
+                                                                                                                <trans-unit id="message.cantunblock">
+                                                                                                                                      <source>message.cantunblock</source>
+                                                                                                                                      <target>Nie możesz odblokować samego siebie.</target>
+                                                                                                                                  </trans-unit>
+                                          <trans-unit id="message.youreblocked">
+                                              <source>message.youreblocked</source>
+                                              <target>Twoje konto zostało zablokowane.</target>
+                                          </trans-unit>
+
+                                                                                    <trans-unit id="message.cantedit">
+                                                                                        <source>message.cantedit</source>
+                                                                                        <target>Twoje konto zostało zablokowane. Nie możesz edytować użytkowników.</target>
+                                                                                    </trans-unit>
+
+                                                               <trans-unit id="message.youreblockedfav">
+                                                                   <source>message.youreblockedfav</source>
+                                                                   <target>Twoje konto zostało zablokowane. Nie możesz dokonywać zmian.</target>
+
+                                                                   </trans-unit>
+
+                      <trans-unit id="action.unblock">
+                          <source>action.unblock</source>
+                          <target>Odblokuj</target>
+                      </trans-unit>
+                           <trans-unit id="title.tag_list">
+                               <source>title.tag_list</source>
+                               <target>Lista tagów</target>
+                           </trans-unit>
+
+                               <trans-unit id="title.tag_details">
+                                   <source>title.tag_details</source>
+                                   <target>Szczegóły tagu</target>
+                               </trans-unit>
+
+                       <trans-unit id="action.back_to_taglist">
+                           <source>action.back_to_taglist</source>
+                           <target>Wróć do listy tagów</target>
+                       </trans-unit>
+
+                           <trans-unit id="action.back_to_tag_list">
+                               <source>action.back_to_tag_list</source>
+                               <target>Wróć do listy tagów</target>
+                           </trans-unit>
+
+                       <trans-unit id="label.email">
+                           <source>label.email</source>
+                           <target>Email</target>
+                       </trans-unit>
+
+                           <trans-unit id="label.username">
+                               <source>label.username</source>
+                               <target>Username</target>
+                           </trans-unit>
+
+                               <trans-unit id="label.passwd">
+                                   <source>label.passwd</source>
+                                   <target>Hasło</target>
+                               </trans-unit>
+
+                       <trans-unit id="label.repeatpasswd">
+                           <source>label.repeatpasswd</source>
+                           <target>Powtórz hasło</target>
+                       </trans-unit>
+
+                               <trans-unit id='message.failRegister'>
+                                                  <source>message.failRegister</source>
+                                                  <target>Rejestracja nie powiodła się.</target>
+                                              </trans-unit>
+
+      <trans-unit id='label.roles'>
+        <source>label.roles</source>
+        <target>Role</target>
+      </trans-unit>
+                 <trans-unit id='label.newpasswd'>
+                    <source>label.newpasswd</source>
+                    <target>Nowe hasło</target>
+                  </trans-unit>
+
+            <trans-unit id='title.account_details'>
+              <source>title.account_details</source>
+              <target>Profil</target>
+            </trans-unit>
+                       <trans-unit id='label.favourites'>
+                          <source>label.favourites</source>
+                          <target>Ulubione albumy</target>
+                        </trans-unit>
+
+
+
+      <trans-unit id='message.favourites'>
+        <source>message.favourites</source>
+        <target>Nie masz ulubionych albumów.</target>
+      </trans-unit>
+                 <trans-unit id='message.notlog'>
+                    <source>message.notlog</source>
+                    <target>Nie jesteś zalogowany.</target>
+                  </trans-unit>
+
+                       <trans-unit id="title.acc_edit">
+                           <source>title.acc_edit</source>
+                           <target>Edytuj profil</target>
+                       </trans-unit>
+                         <trans-unit id='label.register'>
+                            <source>label.register</source>
+                            <target>Zarejestruj się</target>
+                          </trans-unit>
+
+
+                                 <trans-unit id='label.login'>
+                                          <source>label.login</source>
+                                          <target>Zaloguj się</target>
+                                        </trans-unit>
+
+
+
+                                 <trans-unit id='label.logout'>
+                                    <source>label.logout</source>
+                                    <target>Wyloguj się</target>
+                                  </trans-unit>
+
+
+                                         <trans-unit id='label.remember'>
+                                                  <source>label.remember</source>
+                                                  <target>Zapamiętaj mnie</target>
+                                                </trans-unit>
+
+
+                              <trans-unit id='label.albums'>
+                                 <source>label.albums</source>
+                                 <target>Albumy</target>
+                               </trans-unit>
+
+
+                                      <trans-unit id='label.cat'>
+                                               <source>label.cat</source>
+                                               <target>Kategorie</target>
+                                             </trans-unit>
+
+
+                                              <trans-unit id='label.profile'>
+                                                       <source>label.profile</source>
+                                                       <target>Profil</target>
+                                                     </trans-unit>
+
+      <trans-unit id='label.listusers'>
+                                                      <source>label.listusers</source>
+                                                      <target>Użytkownicy</target>
+                                                    </trans-unit>
+
+                                              <trans-unit id='title.comment_delete'>
+                                                       <source>title.comment_delete</source>
+                                                       <target>Usuń komentarz</target>
+                                                     </trans-unit>
+                                                        <trans-unit id="action.back_to_album">
+                                                                                               <source>action.back_to_album</source>
+                                                                                               <target>Wróć do strony albumu</target>
+                                                                                           </trans-unit>
+
+
+       <trans-unit id="message.addedFav">
+                      <source>message.addedFav</source>
+                      <target>Dodano do ulubionych.</target>
+                  </trans-unit>
+
+                      <trans-unit id="message.removedFav">
+                          <source>message.removedFav</source>
+                          <target>Usunięto z ulubionych.</target>
+                      </trans-unit>
+                                                                  <trans-unit id='message.doesnotexist'>
+                                                                      <source>message.doesnotexist</source>
+                                                                      <target>Ten album nie istnieje.</target>
+                                                                  </trans-unit>
+
+                               <trans-unit id="title.chart">
+                                   <source>title.chart</source>
+                                   <target>Ranking top 50</target>
+                               </trans-unit>
+
+                              <trans-unit id="label.chart">
+                                       <source>label.chart</source>
+                                       <target>Ranking</target>
+                                   </trans-unit>
+
+
+
+
+
+    </body>
+  </file>
+</xliff>

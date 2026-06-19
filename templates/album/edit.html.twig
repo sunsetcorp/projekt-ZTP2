@@ -1,0 +1,27 @@
+<h1>{{ 'title.album_edit'|trans({'%id%': album.id|default('')}) }}</h1>
+
+{% include 'default/_form.html.twig' with {
+    page_title: '',
+    form: form,
+    submit_label: 'action.edit'|trans,
+    back_to_list_path: 'album_index',
+} %}
+
+{% if is_granted('ROLE_ADMIN') %}
+    <div class="d-flex justify-content-center mt-3">
+        {% if album.cover %}
+            <a href="{{ path('cover_edit', {id: album.cover.id}) }}"
+               class="btn btn-secondary">
+                {{ 'action.editcover'|trans }}
+            </a>
+        {% else %}
+            <a href="{{ path('cover_create', {id: album.id}) }}"
+               class="btn btn-secondary">
+                {{ 'button.uploadalbum'|trans }}
+            </a>
+        {% endif %}
+
+    </div>
+{% endif %}
+
+

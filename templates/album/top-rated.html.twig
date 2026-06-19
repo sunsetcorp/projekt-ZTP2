@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.chart'|trans }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ 'title.chart'|trans }}</h1>
+
+    <table class="table table-striped">
+
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>{{ 'label.artist'|trans }}</th>
+            <th>{{ 'label.title'|trans }}</th>
+            <th>{{ 'label.avg'|trans }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% for item in albums %}
+
+            <tr>
+
+                <td>{{ loop.index }}</td>
+
+                <td>{{ item[0].artist }}</td>
+
+                <td>
+                    <a href="{{ path('album_show', {
+                        id: item[0].id
+                    }) }}">
+                        {{ item[0].title }}
+                    </a>
+                </td>
+
+                <td>
+                    ★ {{ item.averageRating|number_format(2) }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+{% endblock %}

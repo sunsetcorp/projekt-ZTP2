@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.tag_details'|trans({'%id%': album.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.tag_details'|trans({'%id%': tag.id|default('')}) }}</h1>
+    {% if tag is defined and tag|length %}
+        <dl class="dl-horizontal">
+            <dt>{{ 'label.id'|trans }}</dt>
+            <dd>{{ tag.id }}</dd>
+            <dt>{{ 'label.title'|trans }}</dt>
+            <dd>{{  tag.title }}</dd>
+            <dt>{{ 'label.createdAt'|trans }}</dt>
+            <dd>{{ tag.createdAt ? tag.createdAt|date('Y-m-d H:i:s') : '' }}</dd>
+            <dt>{{ 'label.updatedAt'|trans }}</dt>
+            <dd>{{ tag.updatedAt ? tag.updatedAt|date('Y-m-d H:i:s') : '' }}</dd>
+
+        </dl>
+        <p>
+            <a href="{{ url('tag_index') }}" title="{{ 'action.back_to_taglist'|trans }}">
+                {{ 'action.back_to_tag_list'|trans }}
+            </a>
+        </p>
+        <p>
+            <a href="{{ url('album_index') }}" title="{{ 'action.back_to_album_list'|trans }}">
+                {{ 'action.back_to_album_list'|trans }}
+            </a>
+        </p>
+    {% else %}
+        <p>
+            {{ 'message.album_not_found'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

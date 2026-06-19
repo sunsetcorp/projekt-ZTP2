@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.comment_delete'|trans({'%id%': comment.id}) }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.comment_delete'|trans({'%id%': comment.id}) }}</h1>
+
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+
+    <div >
+        <a href="{{ path('album_show', { 'id': comment.album.id }) }}" class="btn btn-link">
+            {{ 'action.back_to_album'|trans }}
+        </a>
+    </div>
+{% endblock %}

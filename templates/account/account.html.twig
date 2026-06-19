@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.account_details'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.account_details'|trans }}</h1>
+
+    {% if user %}
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>{{ 'label.roles'|trans }}: </strong>{{ user.roles | join(', ') }}</p>
+        <a class="btn btn-outline-success" href="{{ path('app_account_edit') }}">{{ 'action.edit'|trans }}</a>
+
+        <h2>{{ 'label.favourites'|trans }}</h2>
+        <ul>
+            {% for album in user.favorites %}
+                <li>
+                    {{ album.title }} by {{ album.artist }}
+                    <a href="{{ path('remove_favorite', { 'id': album.id }) }}">{{ 'label.removeFav'|trans }}</a>
+                </li>
+            {% else %}
+                <li>{{ 'message.favourites'|trans }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ 'message.notlog'|trans }}</p>
+    {% endif %}
+{% endblock %}

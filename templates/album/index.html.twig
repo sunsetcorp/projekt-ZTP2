@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.album_list'|trans }}
+{% endblock %}
+
+{% block body %}
+
+
+    <h1>{{ 'title.album_list'|trans }}</h1>
+
+    {% if pagination is defined and pagination.items|length %}
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+        <form method="get" class="mb-4">
+
+            <div class="input-group">
+
+                <input
+                        type="text"
+                        name="phrase"
+                        value="{{ phrase }}"
+                        class="form-control"
+                        placeholder=" {{ 'label.placeholdersearch'|trans }}"
+                >
+
+                {% if app.request.query.get('category') %}
+                    <input
+                            type="hidden"
+                            name="category"
+                            value="{{ app.request.query.get('category') }}"
+                    >
+                {% endif %}
+
+                <button class="btn btn-primary">
+                    {{ 'action.search'|trans }}
+                </button>
+
+            </div>
+
+        </form>
+        <div class="action create">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-outline-success" href="{{ path('album_create') }}" title="{{ 'action.create'|trans }}">
+                    {{ 'action.create'|trans }}
+                </a>
+            {% endif %}
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ 'label.id'|trans }}</th>
+                <th>{{'label.artist'|trans}}</th>
+                <th>{{ 'label.title'|trans }}</th>
+                <th>{{'label.releaseDate'|trans}}</th>
+                <th>{{ 'label.category'|trans }}</th>
+                <th>{{'label.author'|trans }}</th>
+                <th>{{ 'label.actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for album in pagination.items %}
+                <tr>
+                    <td>{{ album.id }}</td>
+                    <td>{{ album.artist }}</td>
+                    <td>{{ album.title }}</td>
+                    <td>{{ album.releaseDate|date('Y-m-d') }}</td>
+                    <td>
+                        <a href="{{ path('album_index', {'category': album.category.id}) }}" title="{{ 'action.view'|trans }}">
+                            {{ album.category.title }}
+                        </a>
+                    </td>
+                    <td>{{ album.author.email }}</td>
+                    <td>
+                        {% if is_granted('VIEW', album) %}
+                            <a class="btn btn-outline-primary" href="{{ path('album_show', {id: album.id}) }}" title="{{ 'action.view'|trans }}">
+                                {{ 'action.view'|trans }}
+                            </a>
+                        {% endif %}
+
+                        {% if is_granted('EDIT', album) %}
+                            <a class="btn btn-outline-success" href="{{ path('album_edit', {id: album.id}) }}" title="{{ 'action.edit'|trans }}">
+                                {{ 'action.edit'|trans }}
+                            </a>
+                        {% endif %}
+
+                        {% if is_granted('DELETE', album) %}
+                            <a class="btn btn-outline-danger" href="{{ path('album_delete', {id: album.id}) }}" title="{{ 'action.delete'|trans }}">
+                                {{ 'action.delete'|trans }}
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    {% else %}
+        <p>{{ 'message.empty_list'|trans }}</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{# templates/account/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.acc_edit'|trans }}{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_USER') %}
+    <h1>{{ 'title.acc_edit'|trans }}</h1>
+    {{ form_start(accountForm) }}
+    {{ form_row(accountForm.username) }}
+    {{ form_row(accountForm.email) }}
+    {{ form_row(accountForm.plainPassword) }}
+    {{ form_row(accountForm.repeatPassword) }}
+    {% if accountForm.roles is defined %}
+        {{ form_row(accountForm.roles) }}
+    {% endif %}
+    <button class="btn btn-primary">{{'action.save'|trans}}</button>
+    {{ form_end(accountForm) }}
+
+    {% else %}
+        <p>{{'message.notlog' }}</p>
+    {% endif %}
+{% endblock %}

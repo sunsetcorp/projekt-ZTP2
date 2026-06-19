@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.albums_with_tag'|trans({'%tag%': tag.title}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.albums_with_tag'|trans({'%tag%': tag.title}) }}</h1>
+
+    {% if albums is defined and albums|length > 0 %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ 'label.id'|trans }}</th>
+                <th>{{ 'label.artist'|trans }}</th>
+                <th>{{ 'label.title'|trans }}</th>
+                <th>{{ 'label.releaseDate'|trans }}</th>
+                <th>{{ 'label.category'|trans }}</th>
+                <th>{{ 'label.actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for album in albums %}
+                <tr>
+                    <td>{{ album.id }}</td>
+                    <td>{{ album.artist }}</td>
+                    <td>{{ album.title }}</td>
+                    <td>{{ album.releaseDate|date('Y/m/d') }}</td>
+                    <td>{{ album.category.title }}</td>
+                    <td>
+                        <a class="btn btn-outline-primary" href="{{ path('album_show', {id: album.id}) }}" title="{{ 'action.view'|trans }}">
+                            {{ 'action.view'|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ 'message.no_albums_with_tag'|trans }}</p>
+    {% endif %}
+
+    <p>
+        <a href="{{ path('album_index') }}" title="{{ 'action.back_to_album_list'|trans }}">
+            {{ 'action.back_to_album_list'|trans }}
+        </a>
+    </p>
+{% endblock %}

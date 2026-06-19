@@ -1,0 +1,27 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'label.register'|trans}}{% endblock %}
+
+{% block body %}
+    <form method="post" action="{{ path('app_register') }}">
+        {% if app.user %}
+            <div class="mb-3">
+                You are already registered as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+
+        <h1 class="h3 mb-3 font-weight-normal">{{'label.register'|trans}}</h1>
+        {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.username) }}
+        {{ form_row(registrationForm.password.first) }}
+        {{ form_row(registrationForm.password.second) }}
+
+        <button class="btn btn-lg btn-primary" type="submit" data-testid="register">
+            {{'label.register'|trans}}
+        </button>
+        {{ form_end(registrationForm) }}
+    </form>
+{% endblock %}

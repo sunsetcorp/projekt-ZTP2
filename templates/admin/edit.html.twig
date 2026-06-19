@@ -1,0 +1,16 @@
+{# templates/admin/edit_user.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.acc_edit'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.acc_edit'|trans }} User: {{ user.username }}</h1>
+
+    {{ form_start(userForm) }}
+    {{ form_row(userForm.username) }}
+    {{ form_row(userForm.email) }}
+    {{ form_row(userForm.plainPassword) }}
+    {{ form_row(userForm.roles) }}
+    <button class="btn" data-testid="save-user">{{ "action.save"|trans }}</button>
+    {{ form_end(userForm) }}
+{% endblock %}

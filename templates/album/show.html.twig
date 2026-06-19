@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.album_details'|trans({'%id%': album.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+    {% if album.cover %}
+        <img
+                src="{{ asset('uploads/covers/' ~ album.cover.filename) }}"
+                alt="{{ album.title }}"
+                width="250"
+                class="img-fluid"
+        >
+    {% endif %}
+    <h1>{{ 'title.album_details'|trans({'%id%': album.id|default('')}) }}</h1>
+    {% if album is defined %}
+        <dl class="dl-horizontal">
+            <dt>{{ 'label.id'|trans }}</dt>
+            <dd>{{ album.id }}</dd>
+            <dt>{{ 'label.artist'|trans }}</dt>
+            <dd>{{ album.artist }}</dd>
+            <dt>{{ 'label.title'|trans }}</dt>
+            <dd>{{ album.title }}</dd>
+            <dt>{{ 'label.releaseDate'|trans }}</dt>
+            <dd>{{ album.releaseDate|date('Y-m-d') }}</dd>
+            <dt>{{ 'label.category'|trans }}</dt>
+            <dd>{{ album.category.title }}</dd>
+            <dt>{{ 'label.author'|trans }}</dt>
+            <dd>{{ album.author.email }}</dd>
+            <dt>{{ 'label.avg'|trans }}</dt>
+            <dd>
+                {{ averageRating|number_format(1) }}/5
+            </dd>
+            <dt>{{ 'label.tags'|trans }}</dt>
+            <dd>
+                {% for tag in album.tags %}
+                <a href="{{ path('album_by_tag', {'id': tag.id}) }}" title="{{ 'action.view'|trans }}">
+                    {{ tag.title }}
+                    </a>{% if not loop.last %}, {% endif %}
+                {% else %}
+                    {{ 'label.none'|trans }}
+                {% endfor %}
+            </dd>
+        </dl>
+
+        {% if app.user %}
+            <form action="{{ path('favorite_album', {id: album.id}) }}" method="post">
+                <button class="btn btn-primary">
+                    {% if app.user.favorites.contains(album) %}
+                        {{ 'label.removeFav'|trans }}
+                    {% else %}
+                        {{ 'label.addFav'|trans }}
+                    {% endif %}
+                </button>
+            </form>
+        {% endif %}
+
+        {% if app.user and not app.user.isBlocked %}
+
+            <h2>{{ 'title.rate'|trans }}</h2>
+
+            <div class="mb-3">
+
+                {% for i in 1..5 %}
+
+                    <form
+                            action="{{ path('album_rate', {id: album.id}) }}"
+                            method="post"
+                            style="display:inline;"
+                    >
+
+                        <button
+                                type="submit"
+                                name="rating"
+                                value="{{ i }}"
+                                style="
+                            background:none;
+                            border:none;
+                            font-size:2rem;
+                            cursor:pointer;
+                            padding:0;
+                        "
+                        >
+
+                            {% if userRating is defined and userRating >= i %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <h2>{{ 'title.add_comment'|trans }}</h2>
+            {{ form_start(comment_form, {'action': path('comment_add', {'id': album.id})}) }}
+            {{ form_widget(comment_form) }}
+            <button class="btn btn-primary" data-testid="add-comment">{{ 'action.add_comment'|trans }}</button>
+            {{ form_end(comment_form) }}
+        {% endif %}
+
+
+        <h2>{{ 'title.comments'|trans }}</h2>
+        {% for comment in comments %}
+            <div class="comment">
+                <div>
+                    <strong>{{ comment.author.username }}</strong> ({{ comment.createdAt|date('Y-m-d H:i') }})
+                </div>
+                <div>{{ comment.content }}</div>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('comment_delete', {id: comment.id}) }}" class="btn btn-danger">{{ 'action.delete'|trans }}</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>{{ 'message.no_comments'|trans }}</p>
+        {% endfor %}
+
+        <p>
+            <a href="{{ path('album_index') }}" title="{{ 'action.back_to_list'|trans }}">
+                {{ 'action.back_to_album_list'|trans }}
+            </a>
+        </p>
+    {% else %}
+        <p>{{ 'message.album_not_found'|trans }}</p>
+    {% endif %}
+{% endblock %}
