@@ -36,15 +36,15 @@ class Rating
     /**
      * User.
      */
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     /**
      * Album.
      */
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Album::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Album $album = null;
 
     /**

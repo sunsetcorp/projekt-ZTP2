@@ -53,26 +53,30 @@ class AccountController extends AbstractController
     {
         $result = $this->accountService->handleAccountEdit($request);
 
-        if (is_array($result)) {
-            if ('admin_error' === $result['status']) {
+        return match ($result['status']) {
+            'access_denied' => $this->render('error/accessdenied.html.twig'),
+
+            'form_invalid' => $this->render('account/edit.html.twig', [
+                'accountForm' => $result['form']->createView(),
+            ]),
+
+            'admin_error' => (function (): Response {
                 $this->addFlash(
                     'danger',
                     $this->translator->trans('message.admin_error')
                 );
 
                 return $this->redirectToRoute('app_account_edit');
-            }
+            })(),
 
-            if ('success' === $result['status']) {
+            'success' => (function (): Response {
                 $this->addFlash(
                     'success',
                     $this->translator->trans('message.edited_successfully')
                 );
 
                 return $this->redirectToRoute('app_account');
-            }
-        }
-
-        return $result;
+            })(),
+        };
     }
 }

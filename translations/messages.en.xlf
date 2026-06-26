@@ -2,6 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="file.ext">
     <body>
+          <trans-unit id="role.user">
+            <source>role.user</source>
+            <target>User</target>
+          </trans-unit>
+<trans-unit id="account.email_taken">
+    <source>account.email_taken</source>
+    <target>This email address is already taken.</target>
+</trans-unit>
+          <trans-unit id="role.admin">
+            <source>role.admin</source>
+            <target>Admin</target>
+          </trans-unit>
       <trans-unit id="label.actions">
         <source>label.actions</source>
         <target>Actions</target>
@@ -10,6 +22,14 @@
                     <source>label.editcover</source>
                     <target>Edit the cover</target>
                   </trans-unit>
+                                                  <trans-unit id="comment.cannot_be_empty">
+                                                      <source>comment.cannot_be_empty</source>
+                                                      <target>Comment cannot be empty.</target>
+                                                  </trans-unit>
+                                  <trans-unit id="message.comment.too_short">
+                                      <source>comment.too_short</source>
+                                      <target>Comment is too short.</target>
+                                  </trans-unit>
                                     <trans-unit id="message.cantunblock">
                                       <source>message.cantunblock</source>
                                       <target>You cannot unblock yourself.</target>
@@ -18,6 +38,18 @@
                                                         <source>message.successfullyrated</source>
                                                         <target>Rated release successfully.</target>
                                                       </trans-unit>
+               <trans-unit id="label.accessdenied">
+                   <source>label.accessdenied</source>
+                   <target>Access denied.</target>
+               </trans-unit>
+                               <trans-unit id="message.loginaccess">
+                                   <source>message.loginaccess</source>
+                                   <target>You have to login in order to access this page.</target>
+                               </trans-unit>
+                   <trans-unit id="message.accessdenied">
+                       <source>message.accessdenied</source>
+                       <target>You do not have permission to access this page.</target>
+                   </trans-unit>
             <trans-unit id="label.genre">
               <source>label.genre</source>
               <target>Genre</target>

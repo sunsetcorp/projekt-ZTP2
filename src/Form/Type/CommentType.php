@@ -11,6 +11,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Form type for managing Comment entity.
@@ -29,6 +31,10 @@ class CommentType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label' => 'label.comment',
                 'attr' => ['rows' => 5],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(min: 1),
+                ],
             ]);
     }
 

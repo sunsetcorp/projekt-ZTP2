@@ -126,7 +126,6 @@ class CoverControllerTest extends WebTestCase
         $em->flush();
 
         $client->loginUser($user);
-
         $album->setCover(null);
         $em->flush();
 

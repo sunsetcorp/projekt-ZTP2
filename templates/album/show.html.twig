@@ -7,10 +7,10 @@
 {% block body %}
     {% if album.cover %}
         <img
-                src="{{ asset('uploads/covers/' ~ album.cover.filename) }}"
-                alt="{{ album.title }}"
-                width="250"
-                class="img-fluid"
+            src="{{ asset('uploads/covers/' ~ album.cover.fileName) }}"
+            alt="{{ album.title }}"
+            width="250"
+            class="img-fluid"
         >
     {% endif %}
     <h1>{{ 'title.album_details'|trans({'%id%': album.id|default('')}) }}</h1>
@@ -23,7 +23,7 @@
             <dt>{{ 'label.title'|trans }}</dt>
             <dd>{{ album.title }}</dd>
             <dt>{{ 'label.releaseDate'|trans }}</dt>
-            <dd>{{ album.releaseDate|date('Y-m-d') }}</dd>
+            <dd>{{ album.releaseDate|date('d-m-Y') }}</dd>
             <dt>{{ 'label.category'|trans }}</dt>
             <dd>{{ album.category.title }}</dd>
             <dt>{{ 'label.author'|trans }}</dt>
@@ -112,7 +112,7 @@
         {% for comment in comments %}
             <div class="comment">
                 <div>
-                    <strong>{{ comment.author.username }}</strong> ({{ comment.createdAt|date('Y-m-d H:i') }})
+                    <strong>{{ comment.author.username }}</strong> ({{ comment.createdAt|date('d-m-Y H:i') }})
                 </div>
                 <div>{{ comment.content }}</div>
 

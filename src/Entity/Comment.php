@@ -41,14 +41,14 @@ class Comment
     /**
      * Author of the comment.
      */
-    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
     /**
      * Album to which the comment belongs.
      */
-    #[ORM\ManyToOne(targetEntity: Album::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: Album::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Album $album = null;
 

@@ -55,7 +55,7 @@ class RatingRepository extends ServiceEntityRepository
         return $this->getEntityManager()->createQueryBuilder()
             ->select('a, AVG(r.value) AS averageRating')
             ->from(Album::class, 'a')
-            ->join('a.ratings', 'r')
+            ->join(Rating::class, 'r', 'WITH', 'r.album = a')
             ->groupBy('a.id')
             ->orderBy('averageRating', 'DESC')
             ->setMaxResults($limit)

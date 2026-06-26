@@ -2,6 +2,19 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="file.ext">
     <body>
+      <trans-unit id="role.user">
+        <source>role.user</source>
+        <target>Użytkownik</target>
+      </trans-unit>
+
+      <trans-unit id="role.admin">
+        <source>role.admin</source>
+        <target>Administrator</target>
+      </trans-unit>
+<trans-unit id="account.email_taken">
+    <source>account.email_taken</source>
+    <target>Ten adres e-mail jest już używany.</target>
+</trans-unit>
       <trans-unit id="label.actions">
         <source>label.actions</source>
         <target>Działania</target>
@@ -380,6 +393,26 @@
                                               <source>message.youreblocked</source>
                                               <target>Twoje konto zostało zablokowane.</target>
                                           </trans-unit>
+    <trans-unit id="label.accessdenied">
+        <source>label.accessdenied</source>
+        <target>Odmowa dostępu</target>
+    </trans-unit>
+        <trans-unit id="message.accessdenied">
+            <source>message.accessdenied</source>
+            <target>Nie masz uprawnień do wyświetlania tej zawartości.</target>
+        </trans-unit>
+                <trans-unit id="message.loginaccess">
+                    <source>message.loginaccess</source>
+                    <target>Zaloguj się żeby wyświetlić zawartość.</target>
+                </trans-unit>
+                                <trans-unit id="comment.cannot_be_empty">
+                                    <source>comment.cannot_be_empty</source>
+                                    <target>Komentarz nie może być pusty.</target>
+                                </trans-unit>
+                <trans-unit id="message.comment.too_short">
+                    <source>comment.too_short</source>
+                    <target>Komentarz jest za krótki.</target>
+                </trans-unit>
 
                                                                                     <trans-unit id="message.cantedit">
                                                                                         <source>message.cantedit</source>

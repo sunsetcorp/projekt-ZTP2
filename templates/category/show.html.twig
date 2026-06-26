@@ -13,9 +13,9 @@
             <dt>{{ 'label.title'|trans }}</dt>
             <dd>{{ category.title }}</dd>
             <dt>{{ 'label.createdAt'|trans }}</dt>
-            <dd>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</dd>
+            <dd>{{ category.createdAt ? category.createdAt|date('d-m-Y H:i:s') : '' }}</dd>
             <dt>{{ 'label.updatedAt'|trans }}</dt>
-            <dd>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</dd>
+            <dd>{{ category.updatedAt ? category.updatedAt|date('d-m-Y H:i:s') : '' }}</dd>
         </dl>
 
         <h2>{{ 'title.albums_in_category'|trans }}</h2>
@@ -36,7 +36,7 @@
                         <td>{{ album.id }}</td>
                         <td>{{ album.artist }}</td>
                         <td>{{ album.title }}</td>
-                        <td>{{ album.releaseDate|date('Y/m/d') }}</td>
+                        <td>{{ album.releaseDate|date('d-m-Y') }}</td>
                         <td>
                             <a class="btn btn-outline-primary" href="{{ path('album_show', {id: album.id}) }}" title="{{ 'action.view'|trans }}">
                                 {{ 'action.view'|trans }}

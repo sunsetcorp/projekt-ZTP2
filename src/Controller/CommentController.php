@@ -47,12 +47,18 @@ class CommentController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function add(Request $request, Album $album): Response
     {
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
-        }
         $comment = new Comment();
         $commentForm = $this->createForm(CommentType::class, $comment);
+        $user = $this->getUser();
 
+        if ($user?->isBlocked()) {
+            $this->addFlash(
+                'danger',
+                $this->translator->trans('message.youreblockedfav')
+            );
+
+            return $this->redirectToRoute('album_show', ['id' => $album->getId()]);
+        }
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
@@ -63,6 +69,16 @@ class CommentController extends AbstractController
             $this->commentService->save($comment);
 
             return $this->redirectToRoute('album_show', ['id' => $album->getId()]);
+        }
+
+        if ($commentForm->isSubmitted() && !$commentForm->isValid()) {
+            foreach ($commentForm->getErrors(true) as $error) {
+                $this->addFlash('danger', $this->translator->trans('comment.cannot_be_empty'));
+            }
+
+            return $this->redirectToRoute('album_show', [
+                'id' => $album->getId(),
+            ]);
         }
 
         return $this->render('album/show.html.twig', [
@@ -84,8 +100,15 @@ class CommentController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Comment $comment): Response
     {
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
+        $user = $this->getUser();
+
+        if ($user?->isBlocked()) {
+            $this->addFlash(
+                'danger',
+                $this->translator->trans('message.youreblockedfav')
+            );
+
+            return $this->redirectToRoute('album_show', ['id' => $comment->getAlbum()->getId()]);
         }
 
         $form = $this->createForm(CommentDeleteType::class, null, [
@@ -110,26 +133,5 @@ class CommentController extends AbstractController
             'form' => $form->createView(),
             'comment' => $comment,
         ]);
-    }
-
-    /**
-     * Deny action to blocked user.
-     *
-     * @return ?Response HTTP response
-     */
-    private function denyBlockedUser(): ?Response
-    {
-        $user = $this->getUser();
-
-        if ($user && $user->isBlocked()) {
-            $this->addFlash(
-                'danger',
-                $this->translator->trans('message.youreblockedfav')
-            );
-
-            return $this->redirect($_SERVER['HTTP_REFERER'] ?? $this->generateUrl('album_index'));
-        }
-
-        return null;
     }
 }

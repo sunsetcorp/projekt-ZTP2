@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Class RatingController.
@@ -38,13 +39,11 @@ class RatingController extends AbstractController
      * @return Response HTTP response
      **/
     #[Route('/album/{id}/rate', name: 'album_rate', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function rate(Album $album, Request $request, RatingServiceInterface $ratingService): Response
     {
 
         $user = $this->getUser();
-        if (!$user) {
-            throw $this->createAccessDeniedException();
-        }
 
         if ($user->isBlocked()) {
             $this->addFlash(

@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Class User.
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'email_idx', columns: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'account.email_taken')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -55,12 +57,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     /**
-     * @var Collection<int, Comment>
-     */
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class)]
-    private Collection $comments;
-
-    /**
      * Username.
      */
     #[ORM\Column(type: 'string', length: 50, unique: true)]
@@ -70,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Album>
      */
-    #[ORM\ManyToMany(targetEntity: Album::class, inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Album::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinTable(name: 'favorites')]
     private Collection $favorites;
 
@@ -81,22 +77,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isBlocked = false;
 
     /**
-     * Ratings.
-     *
-     * @var Collection<int, Rating>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rating::class, orphanRemoval: true)]
-    private Collection $ratings;
-
-    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
-        $this->comments = new ArrayCollection();
         $this->favorites = new ArrayCollection();
-        $this->ratings = new ArrayCollection();
     }
 
     /**
@@ -161,7 +147,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = UserRole::ROLE_USER->value;
 
         return array_unique($roles);
@@ -247,51 +232,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    /**
-     * Add a comment to the user's collection.
-     *
-     * @param Comment $comment Comment object to add
-     *
-     * @return $this
-     */
-    public function addComment(Comment $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a comment from the user's collection.
-     *
-     * @param Comment $comment Comment object to remove
-     *
-     * @return $this
-     */
-    public function removeComment(Comment $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            if ($comment->getAuthor() === $this) {
-                $comment->setAuthor(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -327,7 +267,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->favorites->contains($favorite)) {
             $this->favorites->add($favorite);
-            $favorite->addUser($this);
         }
 
         return $this;
@@ -340,56 +279,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return $this
      */
-    #[Route('/album/{id}/remove-favorite', name: 'remove_favorite')]
     public function removeFavorite(Album $favorite): self
     {
-        if ($this->favorites->removeElement($favorite)) {
-            $favorite->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Rating>
-     */
-    public function getRatings(): Collection
-    {
-        return $this->ratings;
-    }
-
-    /**
-     * Add a Rating to the album.
-     *
-     * @param Rating $rating the rating to add
-     *
-     * @return static returns the instance of the current class
-     */
-    public function addRating(Rating $rating): static
-    {
-        if (!$this->ratings->contains($rating)) {
-            $this->ratings->add($rating);
-            $rating->setUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a Rating form the album.
-     *
-     * @param Rating $rating the rating to remove
-     *
-     * @return static returns the instance of the current class
-     */
-    public function removeRating(Rating $rating): static
-    {
-        if ($this->ratings->removeElement($rating)) {
-            // set the owning side to null (unless already changed)
-            if ($rating->getUser() === $this) {
-                $rating->setUser(null);
-            }
-        }
+        $this->favorites->removeElement($favorite);
 
         return $this;
     }

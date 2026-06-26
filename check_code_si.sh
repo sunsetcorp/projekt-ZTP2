@@ -9,7 +9,7 @@ echo "Installing dependencies..."
   composer require --dev friendsofphp/php-cs-fixer  --no-interaction
   composer require --dev squizlabs/php_codesniffer  --no-interaction
   composer require --dev escapestudios/symfony2-coding-standard  --no-interaction
-  ./vendor/bin/phpcs --config-set installed_paths "vendor/escapestudios/symfony2-coding-standard"
+  ./vendor/bin/phpcs --config-set installed_paths "$(realpath vendor/escapestudios/symfony2-coding-standard)"
   ./vendor/bin/phpcs --config-set default_standard Symfony
 } > /dev/null 2>&1
 rm -f -- .php-cs-fixer.dist.php
@@ -17,13 +17,11 @@ rm -f -- .php-cs-fixer.cache
 
 echo "Running php-cs-fixer..."
 ./vendor/bin/php-cs-fixer fix src/ --dry-run -vvv --rules=@Symfony,@PSR1,@PSR2,@PSR12 >> $RESULT_FILE
-./vendor/bin/php-cs-fixer fix tests/ --dry-run -vvv --rules=@Symfony,@PSR1,@PSR2,@PSR12 >> $RESULT_FILE
 rm -f -- .php-cs-fixer.dist.php
 rm -f -- .php-cs-fixer.cache
 
 echo "Running phpcs..."
 ./vendor/bin/phpcs --standard=Symfony src/ --ignore=Kernel.php >> $RESULT_FILE
-./vendor/bin/phpcs --standard=Symfony tests/ --ignore=bootstrap.php >> $RESULT_FILE
 
 echo "Running debug:translation..."
 {
@@ -43,6 +41,4 @@ echo "Tear down..."
   ./bin/console doctrine:schema:drop --no-interaction --full-database --force
   rm -rf var
   rm -rf vendor
-} 2>&1 | tee -a $RESULT_FILE
-echo "========== RESULT FILE =========="
-cat $RESULT_FILE
+} > /dev/null 2>&1

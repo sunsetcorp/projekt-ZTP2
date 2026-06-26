@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
-use Symfony\Component\Form\FormView;
 
 /**
  * Class AccountServiceTest.
@@ -139,29 +138,20 @@ class AccountServiceTest extends KernelTestCase
 
         $security->method('getUser')
             ->willReturn(null);
-
-        $twig = $this->createMock(Environment::class);
-
-        $twig->expects($this->once())
-            ->method('render')
-            ->with('error/accessdenied.html.twig')
-            ->willReturn('access denied');
-
         $service = new AccountService(
             $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $security,
             $this->createMock(FormFactoryInterface::class),
-            $twig,
+            $this->createMock(Environment::class),
             $this->createMock(UserRepository::class),
             $this->createMock(AdminRepository::class),
             $this->createMock(TranslatorInterface::class)
         );
 
         $result = $service->handleAccountEdit(new Request());
-
-        $this->assertInstanceOf(Response::class, $result);
-        $this->assertSame('access denied', $result->getContent());
+        $this->assertIsArray($result);
+        $this->assertSame('access_denied', $result['status']);
     }
 
     /**
@@ -334,9 +324,6 @@ class AccountServiceTest extends KernelTestCase
         $form->method('isSubmitted')->willReturn(false);
         $form->method('isValid')->willReturn(false);
 
-        $form->method('createView')
-            ->willReturn(new FormView());
-
         $formFactory = $this->createMock(FormFactoryInterface::class);
 
         $formFactory->expects($this->once())
@@ -344,15 +331,6 @@ class AccountServiceTest extends KernelTestCase
             ->willReturn($form);
 
         $twig = $this->createMock(Environment::class);
-
-        $twig->expects($this->once())
-            ->method('render')
-            ->with(
-                'account/edit.html.twig',
-                $this->callback(fn ($data) => isset($data['accountForm'])
-                && $data['accountForm'] instanceof FormView)
-            )
-            ->willReturn('edit-page-html');
 
         $service = new AccountService(
             $this->entityManager,
@@ -365,9 +343,11 @@ class AccountServiceTest extends KernelTestCase
             $this->createMock(TranslatorInterface::class)
         );
 
-        $response = $service->handleAccountEdit(new Request());
+        $result = $service->handleAccountEdit(new Request());
 
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertSame('edit-page-html', $response->getContent());
+
+        $this->assertIsArray($result);
+        $this->assertSame('form_invalid', $result['status']);
+        $this->assertArrayHasKey('form', $result);
     }
 }

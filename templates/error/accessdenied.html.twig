@@ -1,9 +1,9 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Access Denied{% endblock %}
+{% block title %}{{ 'label.accessdenied'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Access Denied</h1>
-    <p>You do not have permission to access this page.</p>
+    <h1>{{ 'label.accessdenied'|trans }}</h1>
+    <p>{{ 'message.accessdenied'|trans }}</p>
 {% endblock %}

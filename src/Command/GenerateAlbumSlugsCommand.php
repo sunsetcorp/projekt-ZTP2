@@ -50,7 +50,6 @@ class GenerateAlbumSlugsCommand extends Command
         $albums = $albumRepository->findAll();
         foreach ($albums as $album) {
             $album->setSlug((string) $album->getTitle());
-            // Temporary assignment to force slug generation
             $this->entityManager->persist($album);
         }
 

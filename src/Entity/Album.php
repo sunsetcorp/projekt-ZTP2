@@ -93,31 +93,10 @@ class Album
     private ?User $author = null;
 
     /**
-     * Comments.
-     *
-     * @var Collection<int, Comment>
+     * Cover.
      */
-    #[ORM\OneToMany(mappedBy: 'album', targetEntity: Comment::class, cascade: ['remove'], orphanRemoval: true)]
-    private Collection $comments;
-
-    /**
-     * Users who favorited this album.
-     *
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'favorites')]
-    private Collection $users;
-
-    /**
-     * Ratings.
-     *
-     * @var Collection<int, Rating>
-     */
-    #[ORM\OneToMany(mappedBy: 'album', targetEntity: Rating::class, orphanRemoval: true)]
-    private Collection $ratings;
-
-    #[ORM\OneToOne(mappedBy: 'album', cascade: ['persist', 'remove'])]
-    private ?Cover $cover = null;
+    #[ORM\OneToMany(mappedBy: 'album', targetEntity: Cover::class, fetch: 'EXTRA_LAZY')]
+    private Collection $covers;
 
     /**
      * Album constructor.
@@ -125,9 +104,7 @@ class Album
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-        $this->comments = new ArrayCollection();
-        $this->users = new ArrayCollection();
-        $this->ratings = new ArrayCollection();
+        $this->covers = new ArrayCollection();
     }
 
     /**
@@ -339,53 +316,6 @@ class Album
     }
 
     /**
-     * Getter for Comments.
-     *
-     * @var Collection<int, Comment>
-     *
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    /**
-     * Add a Comment to the album.
-     *
-     * @param Comment $comment the comment to add
-     *
-     * @return static returns the instance of the current class
-     */
-    public function addComment(Comment $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setAlbum($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a Comment from the album.
-     *
-     * @param Comment $comment the comment to remove
-     *
-     * @return static returns the instance of the current class
-     */
-    public function removeComment(Comment $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            if ($comment->getAlbum() === $this) {
-                $comment->setAlbum(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Getter for Users who favorited this album.
      *
      * @var Collection<int, User>
@@ -398,89 +328,13 @@ class Album
     }
 
     /**
-     * Add a User to the list of users who favorited this album.
-     *
-     * @param User $user the user to add
-     *
-     * @return static returns the instance of the current class
-     */
-    public function addUser(User $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addFavorite($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a User from the list of users who favorited this album.
-     *
-     * @param User $user the user to remove
-     *
-     * @return static returns the instance of the current class
-     */
-    public function removeUser(User $user): static
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeFavorite($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Rating>
-     */
-    public function getRatings(): Collection
-    {
-        return $this->ratings;
-    }
-
-    /**
-     * Add a Rating to the album.
-     *
-     * @param Rating $rating the rating to add
-     *
-     * @return static returns the instance of the current class
-     */
-    public function addRating(Rating $rating): static
-    {
-        if (!$this->ratings->contains($rating)) {
-            $this->ratings->add($rating);
-            $rating->setAlbum($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a Rating form the album.
-     *
-     * @param Rating $rating the rating to remove
-     *
-     * @return static returns the instance of the current class
-     */
-    public function removeRating(Rating $rating): static
-    {
-        if ($this->ratings->removeElement($rating)) {
-            if ($rating->getAlbum() === $this) {
-                $rating->setAlbum(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Getter for cover.
      *
      * @return Cover|null the cover of the album
      */
     public function getCover(): ?Cover
     {
-        return $this->cover;
+        return $this->covers->first() ?: null;
     }
 
     /**
@@ -490,15 +344,13 @@ class Album
      *
      * @return static returns the instance of the current class
      */
-    public function setCover(?Cover $cover): static
+    public function setCover(?Cover $cover): self
     {
-
-        $this->cover = $cover;
-        if ($cover && $cover->getAlbum() !== $this) {
+        $this->covers->clear();
+        if (null !== $cover) {
+            $this->covers->add($cover);
             $cover->setAlbum($this);
         }
-
-        $this->cover = $cover;
 
         return $this;
     }

@@ -66,7 +66,7 @@
                     <td>{{ album.id }}</td>
                     <td>{{ album.artist }}</td>
                     <td>{{ album.title }}</td>
-                    <td>{{ album.releaseDate|date('Y-m-d') }}</td>
+                    <td>{{ album.releaseDate|date('d-m-Y') }}</td>
                     <td>
                         <a href="{{ path('album_index', {'category': album.category.id}) }}" title="{{ 'action.view'|trans }}">
                             {{ album.category.title }}

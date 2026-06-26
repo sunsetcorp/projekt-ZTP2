@@ -47,7 +47,7 @@ class RatingControllerTest extends WebTestCase
     {
         $hasher = self::getContainer()->get(UserPasswordHasherInterface::class);
         $user = new User();
-        $user->setUsername('user1');
+        $user->setUsername('user5645431');
         $user->setEmail('user@test.com');
         $user->setRoles(['ROLE_USER']);
         $user->setPassword($hasher->hashPassword($user, 'test'));
@@ -85,8 +85,8 @@ class RatingControllerTest extends WebTestCase
         $hasher = self::getContainer()->get(UserPasswordHasherInterface::class);
 
         $user = new User();
-        $user->setEmail('user2@test.com');
-        $user->setUsername('user2');
+        $user->setEmail('user43532@test.com');
+        $user->setUsername('user5646542');
         $user->setPassword('password');
         $user->setRoles(['ROLE_USER']);
         $user->setPassword($hasher->hashPassword($user, 'test'));

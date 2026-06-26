@@ -6,10 +6,14 @@
 
 namespace App\Tests\Controller;
 
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use PHPUnit\Framework\MockObject\Exception;
 use App\Service\AccountServiceInterface;
+use App\Security\Voter\UserBlockedVoter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -123,13 +127,67 @@ class AccountControllerTest extends WebTestCase
         $service = $this->createMock(AccountServiceInterface::class);
 
         $service->method('handleAccountEdit')
-            ->willReturn(new Response('EDIT FORM HTML'));
+            ->willReturn([
+                'status' => 'access_denied',
+            ]);
 
         $container->set(AccountServiceInterface::class, $service);
 
         $client->request('POST', '/account/edit');
 
         $this->assertResponseIsSuccessful();
-        $this->assertStringContainsString('EDIT FORM HTML', $client->getResponse()->getContent());
+    }
+
+    /**
+     * Test returning invalid response form edit.
+     *
+     * @throws Exception
+     */
+    public function testEditReturnsFormInvalidResponse(): void
+    {
+        $client = static::createClient();
+        $container = static::getContainer();
+
+        $formMock = $this->createMock(FormInterface::class);
+        $formMock->method('createView')
+            ->willReturn(new FormView());
+
+        $service = $this->createMock(AccountServiceInterface::class);
+
+        $service->method('handleAccountEdit')
+            ->willReturn([
+                'status' => 'form_invalid',
+                'form' => $formMock,
+            ]);
+
+        $container->set(AccountServiceInterface::class, $service);
+
+        $client->request('POST', '/account/edit');
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    /**
+     *  Test that voter denies access when token user is not a valid User instance.
+     *
+     * @throws Exception
+     */
+    public function testNonUserDenied(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $token->method('getUser')->willReturn(null);
+
+        $voter = new UserBlockedVoter();
+
+        $ref = new \ReflectionMethod($voter, 'voteOnAttribute');
+
+        $result = $ref->invoke(
+            $voter,
+            UserBlockedVoter::NOT_BLOCKED,
+            null,
+            $token
+        );
+
+        $this->assertFalse($result);
     }
 }

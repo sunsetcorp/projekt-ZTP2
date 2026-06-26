@@ -28,7 +28,7 @@ class CommentControllerTest extends WebTestCase
         $hasher = self::getContainer()->get(UserPasswordHasherInterface::class);
 
         $user = new User();
-        $user->setUsername('user1');
+        $user->setUsername('user555541');
         $user->setEmail('user@test.com');
         $user->setRoles(['ROLE_USER']);
         $user->setPassword($hasher->hashPassword($user, 'test'));

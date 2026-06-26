@@ -78,10 +78,16 @@ class AlbumController extends AbstractController
     #[Route('/album/{id}/remove-favorite', name: 'remove_favorite')]
     public function removeFavorite(int $id, Security $security): Response
     {
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
-        }
+        $user = $this->getUser();
 
+        if ($user?->isBlocked()) {
+            $this->addFlash(
+                'danger',
+                $this->translator->trans('message.youreblockedfav')
+            );
+
+            return $this->redirectToRoute('album_show', ['id' => $id]);
+        }
         $user = $security->getUser();
 
         try {
@@ -133,8 +139,15 @@ class AlbumController extends AbstractController
     #[Route('/album/{id}/favorite', name: 'favorite_album', methods: ['POST'])]
     public function favorite(int $id, EntityManagerInterface $em, Security $security): Response
     {
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
+        $user = $this->getUser();
+
+        if ($user?->isBlocked()) {
+            $this->addFlash(
+                'danger',
+                $this->translator->trans('message.youreblockedfav')
+            );
+
+            return $this->redirectToRoute('album_show', ['id' => $id]);
         }
 
         $user = $security->getUser();
@@ -154,9 +167,10 @@ class AlbumController extends AbstractController
     /**
      * Show action.
      *
-     * @param Album             $album             Album entity
-     * @param CommentRepository $commentRepository Comment repository
-     * @param RatingRepository  $ratingRepository  Rating repository
+     * @param Album                  $album             Album entity
+     * @param CommentRepository      $commentRepository Comment repository
+     * @param RatingRepository       $ratingRepository  Rating repository
+     * @param EntityManagerInterface $em                Entity manager
      *
      * @return Response HTTP response
      */
@@ -167,21 +181,32 @@ class AlbumController extends AbstractController
         methods: 'GET',
     )]
     #[IsGranted('VIEW', subject: 'album')]
-    public function show(Album $album, CommentRepository $commentRepository, RatingRepository $ratingRepository): Response
+    public function show(Album $album, CommentRepository $commentRepository, RatingRepository $ratingRepository, EntityManagerInterface $em): Response
     {
         $commentForm = $this->createForm(CommentType::class, new Comment());
 
-        $userRating = null;
+        $album = $em->createQueryBuilder()
+            ->select('a', 'author', 'category', 'covers', 'tags')
+            ->from(Album::class, 'a')
+            ->leftJoin('a.author', 'author')
+            ->leftJoin('a.category', 'category')
+            ->leftJoin('a.covers', 'covers')
+            ->leftJoin('a.tags', 'tags')
+            ->where('a = :album')
+            ->setParameter('album', $album)
+            ->getQuery()
+            ->getSingleResult();
 
-        if ($this->getUser()) {
+        $user = $this->getUser();
+
+        $userRating = null;
+        if ($user) {
             $rating = $ratingRepository->findOneBy([
                 'album' => $album,
-                'user' => $this->getUser(),
+                'user' => $user,
             ]);
 
-            if ($rating) {
-                $userRating = $rating->getValue();
-            }
+            $userRating = $rating?->getValue();
         }
 
         return $this->render('album/show.html.twig', [
@@ -209,9 +234,7 @@ class AlbumController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('No access for you!');
         }
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
-        }
+        $this->denyAccessUnlessGranted('NOT_BLOCKED');
         $user = $this->getUser();
         $album = new Album();
         $album->setAuthor($user);
@@ -247,10 +270,7 @@ class AlbumController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('No access for you!');
         }
-
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
-        }
+        $this->denyAccessUnlessGranted('NOT_BLOCKED');
 
         $form = $this->createForm(AlbumType::class, $album, ['method' => 'POST', 'action' => $this->generateUrl('album_edit', ['id' => $album->getId()])]);
         $form->handleRequest($request);
@@ -291,9 +311,7 @@ class AlbumController extends AbstractController
             throw $this->createAccessDeniedException('No access for you!');
         }
 
-        if ($response = $this->denyBlockedUser()) {
-            return $response;
-        }
+        $this->denyAccessUnlessGranted('NOT_BLOCKED');
 
         $form = $this->createForm(
             FormType::class,
@@ -340,26 +358,5 @@ class AlbumController extends AbstractController
         return $this->render('album/top-rated.html.twig', [
             'albums' => $albums,
         ]);
-    }
-
-    /**
-     * Forbid action from blocked user.
-     *
-     * @return ?Response HTTP response
-     */
-    private function denyBlockedUser(): ?Response
-    {
-        $user = $this->getUser();
-
-        if ($user && $user->isBlocked()) {
-            $this->addFlash(
-                'danger',
-                $this->translator->trans('message.youreblockedfav')
-            );
-
-            return $this->redirect($_SERVER['HTTP_REFERER'] ?? $this->generateUrl('album_index'));
-        }
-
-        return null;
     }
 }

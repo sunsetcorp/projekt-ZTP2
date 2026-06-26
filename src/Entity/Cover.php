@@ -32,10 +32,9 @@ class Cover
     /**
      * Album.
      */
-    #[ORM\OneToOne(inversedBy: 'cover', targetEntity: Album::class)]
+    #[ORM\ManyToOne(inversedBy: 'covers')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Album $album = null;
-
 
     /**
      * Filename.

@@ -192,9 +192,9 @@ class AdminControllerTest extends WebTestCase
     public function testUserWithoutAdminRoleDenied(): void
     {
         $user = $this->createUser([UserRole::ROLE_USER->value]);
-
+        $user2block = $this->createUser([UserRole::ROLE_USER->value]);
         $this->client->loginUser($user);
-        $this->client->request('GET', '/admin/users/block/1');
+        $this->client->request('GET', '/admin/users/block/'.$user2block->getId());
 
         $this->assertResponseRedirects('/access-denied');
     }

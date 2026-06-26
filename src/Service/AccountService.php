@@ -80,49 +80,55 @@ class AccountService implements AccountServiceInterface
      *
      * @throws \RuntimeException If an error occurs during form handling or entity persistence
      */
-    public function handleAccountEdit(Request $request): Response|array
+    public function handleAccountEdit(Request $request): array
     {
         $user = $this->getCurrentUser();
 
         if (!$user) {
-            return new Response($this->twig->render('error/accessdenied.html.twig'));
+            return ['status' => 'access_denied'];
         }
 
         $originalRoles = $user->getRoles();
 
         $form = $this->formFactory->create(AccountType::class, $user, [
-            'is_admin' => in_array('ROLE_ADMIN', $user->getRoles()),
+            'is_admin' => in_array('ROLE_ADMIN', $user->getRoles(), true),
         ]);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newRoles = $form->has('roles') ? $form->get('roles')->getData() : $user->getRoles();
-
-            $wasAdmin = in_array('ROLE_ADMIN', $originalRoles, true);
-            $isAdminNow = in_array('ROLE_ADMIN', $newRoles, true);
-
-            if ($wasAdmin && !$isAdminNow) {
-                $adminCount = $this->adminRepository->countOtherAdmins($user);
-
-                if (0 === $adminCount) {
-                    return ['status' => 'admin_error'];
-                }
-            }
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            if ($plainPassword) {
-                $encodedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
-                $user->setPassword($encodedPassword);
-            }
-
-            $this->userRepository->save($user);
-
-            return ['status' => 'success'];
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return [
+                'status' => 'form_invalid',
+                'form' => $form,
+            ];
         }
 
-        return new Response($this->twig->render('account/edit.html.twig', [
-            'accountForm' => $form->createView(),
-        ]));
+        $newRoles = $form->has('roles')
+            ? $form->get('roles')->getData()
+            : $user->getRoles();
+
+        $wasAdmin = in_array('ROLE_ADMIN', $originalRoles, true);
+        $isAdminNow = in_array('ROLE_ADMIN', $newRoles, true);
+
+        if ($wasAdmin && !$isAdminNow) {
+            $adminCount = $this->adminRepository->countOtherAdmins($user);
+
+            if (0 === $adminCount) {
+                return ['status' => 'admin_error'];
+            }
+        }
+
+        $plainPassword = $form->get('plainPassword')->getData();
+
+        if ($plainPassword) {
+            $encodedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($encodedPassword);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->userRepository->save($user);
+        }
+
+        return ['status' => 'success'];
     }
 }

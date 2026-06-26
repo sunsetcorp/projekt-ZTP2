@@ -1,0 +1,3 @@
+# translations/validators.pl.yaml
+account:
+    email_taken: "This email address is already taken."

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AuthenticationEntryPoint.
@@ -25,8 +26,9 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      * AuthenticationEntryPoint constructor.
      *
      * @param UrlGeneratorInterface $urlGenerator The URL generator service
+     * @param TranslatorInterface   $translator   The translator interface
      */
-    public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -43,8 +45,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
     {
-        // add a custom flash message and redirect to the login page
-        $request->getSession()->getFlashBag()->add('note', 'You have to login in order to access this page.');
+        $request->getSession()->getFlashBag()->add('note', $this->translator->trans('message.loginaccess'));
 
         return new RedirectResponse($this->urlGenerator->generate('security_login'));
     }

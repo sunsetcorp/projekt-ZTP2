@@ -44,7 +44,10 @@ class AlbumRepository extends ServiceEntityRepository
      */
     public function queryAll(): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
+        return $this->createQueryBuilder('album')
+            ->addSelect('category', 'author')
+            ->leftJoin('album.category', 'category')
+            ->leftJoin('album.author', 'author')
             ->orderBy('album.releaseDate', 'DESC');
     }
 
@@ -116,17 +119,5 @@ class AlbumRepository extends ServiceEntityRepository
 
         $em->remove($album);
         $em->flush();
-    }
-
-    /**
-     * Get or create new query builder.
-     *
-     * @param QueryBuilder|null $queryBuilder Query builder
-     *
-     * @return QueryBuilder Query builder
-     */
-    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
-    {
-        return $queryBuilder ?? $this->createQueryBuilder('album');
     }
 }

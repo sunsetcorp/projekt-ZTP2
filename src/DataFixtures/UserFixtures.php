@@ -19,6 +19,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class UserFixtures extends Fixture
 {
+    public const ADMIN_USER = 'admin-user';
+    public const NORMAL_USER = 'normal-user';
+
     /**
      * UserFixtures constructor.
      *
@@ -35,10 +38,8 @@ class UserFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        // Create users
         $this->loadUsers($manager);
 
-        // Create admins
         $this->loadAdmins($manager);
 
         $manager->flush();
@@ -54,8 +55,19 @@ class UserFixtures extends Fixture
         for ($i = 0; $i < 10; ++$i) {
             $email = sprintf('user%d@example.com', $i);
             $username = sprintf('user%d', $i);
-            $user = $this->createUser($email, $username, 'user1234', [UserRole::ROLE_USER]);
+
+            $user = $this->createUser(
+                $email,
+                $username,
+                'user1234',
+                [UserRole::ROLE_USER]
+            );
+
             $manager->persist($user);
+
+            if (0 === $i) {
+                $this->addReference(self::NORMAL_USER, $user);
+            }
         }
     }
 
@@ -69,8 +81,19 @@ class UserFixtures extends Fixture
         for ($i = 0; $i < 3; ++$i) {
             $email = sprintf('admin%d@example.com', $i);
             $username = sprintf('admin%d', $i);
-            $user = $this->createUser($email, $username, 'admin1234', [UserRole::ROLE_USER, UserRole::ROLE_ADMIN]);
+
+            $user = $this->createUser(
+                $email,
+                $username,
+                'admin1234',
+                [UserRole::ROLE_USER, UserRole::ROLE_ADMIN]
+            );
+
             $manager->persist($user);
+
+            if (0 === $i) {
+                $this->addReference(self::ADMIN_USER, $user);
+            }
         }
     }
 
