@@ -209,13 +209,12 @@ class AlbumControllerTest extends WebTestCase
     public function testCreatePostSuccessAsAdmin(): void
     {
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
-
+        $category = new Category();
+        $category->setTitle('Honky tonk');
+        $this->entityManager->persist($category);
+        $this->entityManager->flush();
         $this->client->loginUser($admin);
-        $category = $this->entityManager
-            ->getRepository(Category::class)
-            ->findOneBy([]);
 
-        self::assertNotNull($category);
         $crawler = $this->client->request('GET', '/create');
 
         $form = $crawler->filter('[data-testid="submit"]')->form();
@@ -227,6 +226,11 @@ class AlbumControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertResponseRedirects('/');
+
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $album = $entityManager->getRepository(Album::class)->findOneBy(['title' => 'New Album']);
+
+        self::assertNotNull($album);
     }
 
     /**

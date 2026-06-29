@@ -119,4 +119,14 @@ class AdminRepository extends ServiceEntityRepository
 
         return $this->paginator->paginate($queryBuilder, $page, $limit);
     }
+
+    /**
+     * Finds all users.
+     *
+     * @return User[] User array
+     */
+    public function findAllUsers(): array
+    {
+        return $this->findAll();
+    }
 }

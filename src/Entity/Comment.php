@@ -9,6 +9,7 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Comment.
@@ -30,6 +31,8 @@ class Comment
      * Content of the comment.
      */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1)]
     private ?string $content = null;
 
     /**
@@ -89,7 +92,7 @@ class Comment
     /**
      * Getter for createdAt.
      *
-     * @return int|null Id
+     * @return \DateTimeImmutable|null Id
      */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -123,7 +126,7 @@ class Comment
     /**
      * Setter for author.
      *
-     * @param string|null $author The author of the album
+     * @param User|null $author The author of the album
      *
      * @return static returns the instance of the current class
      */

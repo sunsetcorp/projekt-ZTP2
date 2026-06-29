@@ -8,7 +8,6 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\AdminRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -21,12 +20,11 @@ class AdminService implements AdminServiceInterface
     /**
      * AdminService constructor.
      *
-     * @param EntityManagerInterface      $entityManager   The entity manager for database operations
      * @param UserPasswordHasherInterface $passwordHasher  The password hasher for hashing user passwords
      * @param PaginatorInterface          $paginator       The paginator service
      * @param AdminRepository             $adminRepository The admin repository
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly AdminRepository $adminRepository)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly AdminRepository $adminRepository)
     {
     }
 
@@ -37,7 +35,7 @@ class AdminService implements AdminServiceInterface
      */
     public function getAllUsers(): array
     {
-        return $this->entityManager->getRepository(User::class)->findAll();
+        return $this->adminRepository->findAllUsers();
     }
 
     /**

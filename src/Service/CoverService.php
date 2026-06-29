@@ -59,4 +59,16 @@ class CoverService implements CoverServiceInterface
 
         $this->create($uploadedFile, $cover, $album);
     }
+
+    /**
+     * Find cover by album.
+     *
+     * @param Album $album The album
+     *
+     * @return Cover|null Find cover for album
+     */
+    public function findByAlbum(Album $album): ?Cover
+    {
+        return $this->coverRepository->findOneByAlbum($album);
+    }
 }

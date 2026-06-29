@@ -32,7 +32,7 @@ class Cover
     /**
      * Album.
      */
-    #[ORM\ManyToOne(inversedBy: 'covers')]
+    #[ORM\OneToOne]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Album $album = null;
 

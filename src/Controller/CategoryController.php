@@ -12,8 +12,6 @@ namespace App\Controller;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\Type\CategoryType;
 use App\Entity\Category;
-use App\Repository\AlbumRepository;
-use App\Repository\CategoryRepository;
 use App\Service\CategoryServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,25 +54,22 @@ class CategoryController extends AbstractController
     /**
      * Show action.
      *
-     * @param CategoryRepository $categoryRepository The category repository
-     * @param AlbumRepository    $albumRepository    The album repository
-     * @param int                $id                 The ID of the category to show
+     * @param int $id The ID of the category to show
      *
      * @return Response HTTP response
      */
     #[Route('/category/{id}', name: 'category_show', methods: ['GET'])]
-    public function show(CategoryRepository $categoryRepository, AlbumRepository $albumRepository, int $id): Response
+    public function show(int $id): Response
     {
-        $category = $categoryRepository->find($id);
-        if (!$category) {
-            throw $this->createNotFoundException('The category does not exist');
+        try {
+            $data = $this->categoryService->getCategoryWithAlbums($id);
+        } catch (\InvalidArgumentException) {
+            throw $this->createNotFoundException($this->translator->trans('message.category_not_found'));
         }
 
-        $albums = $albumRepository->findBy(['category' => $category]);
-
         return $this->render('category/show.html.twig', [
-            'category' => $category,
-            'albums' => $albums,
+            'category' => $data['category'],
+            'albums' => $data['albums'],
         ]);
     }
 

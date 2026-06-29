@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    {% if album.cover %}
+    {% if cover %}
         <img
-            src="{{ asset('uploads/covers/' ~ album.cover.fileName) }}"
+            src="{{ asset('uploads/covers/' ~ cover.fileName) }}"
             alt="{{ album.title }}"
             width="250"
             class="img-fluid"

@@ -9,7 +9,6 @@ namespace App\Service;
 use App\Entity\User;
 use App\Form\Type\RegistrationFormType;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -27,7 +26,6 @@ class RegistrationService implements RegistrationServiceInterface
     /**
      * RegistrationService constructor.
      *
-     * @param EntityManagerInterface      $entityManager     The entity manager
      * @param FormFactoryInterface        $formFactory       The form factory
      * @param UserPasswordHasherInterface $passwordHasher    The password hasher
      * @param UserAuthenticatorInterface  $userAuthenticator The user authenticator
@@ -35,7 +33,7 @@ class RegistrationService implements RegistrationServiceInterface
      * @param Security                    $security          The security service
      * @param UserRepository              $userRepository    The user repository
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly FormFactoryInterface $formFactory, private readonly UserPasswordHasherInterface $passwordHasher, private readonly UserAuthenticatorInterface $userAuthenticator, private readonly LoginFormAuthenticator $authenticator, private readonly Security $security, private readonly UserRepository $userRepository)
+    public function __construct(private readonly FormFactoryInterface $formFactory, private readonly UserPasswordHasherInterface $passwordHasher, private readonly UserAuthenticatorInterface $userAuthenticator, private readonly LoginFormAuthenticator $authenticator, private readonly Security $security, private readonly UserRepository $userRepository)
     {
     }
 

@@ -7,6 +7,7 @@
 namespace App\Repository;
 
 use App\Entity\Cover;
+use App\Entity\Album;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -36,5 +37,21 @@ class CoverRepository extends ServiceEntityRepository
 
         $em->persist($cover);
         $em->flush();
+    }
+
+    /**
+     * Find cover for album.
+     *
+     * @param Album $album The album to find cover for
+     *
+     * @return Cover|null Find cover for album
+     */
+    public function findOneByAlbum(Album $album): ?Cover
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.album = :album')
+            ->setParameter('album', $album)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

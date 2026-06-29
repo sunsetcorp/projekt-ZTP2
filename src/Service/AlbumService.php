@@ -9,9 +9,12 @@ namespace App\Service;
 use App\Entity\Album;
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Entity\Cover;
 use App\Repository\CommentRepository;
+use App\Repository\CoverRepository;
 use App\Repository\AlbumRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\RatingRepository;
+use App\Repository\TagRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -35,13 +38,15 @@ class AlbumService implements AlbumServiceInterface
     /**
      * Constructor.
      *
-     * @param AlbumRepository        $albumRepository   Album repository
-     * @param PaginatorInterface     $paginator         Paginator
-     * @param EntityManagerInterface $entityManager     The entity manager
-     * @param TranslatorInterface    $translator        The translator
-     * @param CommentRepository      $commentRepository Comment repository
+     * @param AlbumRepository     $albumRepository   Album repository
+     * @param PaginatorInterface  $paginator         Paginator
+     * @param TranslatorInterface $translator        The translator
+     * @param CoverRepository     $coverRepository   Cover repository
+     * @param CommentRepository   $commentRepository Comment repository
+     * @param RatingRepository    $ratingRepository  Rating repository
+     * @param TagRepository       $tagRepository     Tag repository
      */
-    public function __construct(private readonly AlbumRepository $albumRepository, private readonly PaginatorInterface $paginator, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator, CommentRepository $commentRepository)
+    public function __construct(private readonly AlbumRepository $albumRepository, private readonly PaginatorInterface $paginator, private readonly TranslatorInterface $translator, private readonly CoverRepository $coverRepository, private readonly CommentRepository $commentRepository, private readonly RatingRepository $ratingRepository, private readonly TagRepository $tagRepository)
     {
     }
 
@@ -114,12 +119,12 @@ class AlbumService implements AlbumServiceInterface
         $album = $this->albumRepository->find($id);
 
         if (!$album) {
-            throw new \InvalidArgumentException('Album not found');
+            throw new \InvalidArgumentException($this->translator->trans('message.album_not_found'));
         }
 
         if ($user->getFavorites()->contains($album)) {
             $user->removeFavorite($album);
-            $this->entityManager->flush();
+            $this->albumRepository->flush();
         }
     }
 
@@ -151,7 +156,133 @@ class AlbumService implements AlbumServiceInterface
             $message = $this->translator->trans('message.addedFav');
         }
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->albumRepository->saveUser($user);
+    }
+
+    /**
+     * Toggle favourite album by id.
+     *
+     * @param int  $id   the id of an album
+     * @param User $user the user
+     *
+     * @return string Message to display to user
+     */
+    public function toggleFavoriteById(int $id, User $user): string
+    {
+        $album = $this->albumRepository->find($id);
+
+        if (!$album) {
+            throw new \InvalidArgumentException($this->translator->trans('message.album_not_found'));
+        }
+
+        if ($user->getFavorites()->contains($album)) {
+            $user->removeFavorite($album);
+            $message = 'message.removedFav';
+        } else {
+            $user->addFavorite($album);
+            $message = 'message.addedFav';
+        }
+
+        $this->albumRepository->save($album);
+
+        return $message;
+    }
+
+    /**
+     * Get album details.
+     *
+     * @param Album $album the album
+     *
+     * @return Album The album details to render the page
+     */
+    public function getDetailedAlbum(Album $album): Album
+    {
+        return $this->albumRepository->findDetailedAlbum($album);
+    }
+
+    /**
+     * Get comments.
+     *
+     * @param Album $album The album
+     *
+     * @return array Array of comments to display
+     */
+    public function getComments(Album $album): array
+    {
+        return $this->commentRepository->findBy(['album' => $album]);
+    }
+
+    /**
+     * Get the album cover.
+     *
+     * @param Album $album The album to get cover for
+     *
+     * @return Cover|null Get the cover for album
+     */
+    public function getCover(Album $album): ?Cover
+    {
+        return $this->coverRepository->findOneByAlbum($album);
+    }
+
+    /**
+     * Get user rating.
+     *
+     * @param Album     $album the album
+     * @param User|null $user  the user
+     *
+     * @return int|null The user rating of the album
+     */
+    public function getUserRating(Album $album, ?User $user): ?int
+    {
+        if (!$user) {
+            return null;
+        }
+
+        $rating = $this->ratingRepository->findOneBy([
+            'album' => $album,
+            'user' => $user,
+        ]);
+
+        return $rating?->getValue();
+    }
+
+    /**
+     * Get the average rating for an album.
+     *
+     * @param Album $album the album
+     *
+     * @return float The average rating of the album
+     */
+    public function getAverageRating(Album $album): float
+    {
+        return $this->ratingRepository->getAverageForAlbum($album);
+    }
+
+    /**
+     *  Gets top-rated albums.
+     *
+     * @return array Array of rated albums
+     */
+    public function getTopRatedAlbums(): array
+    {
+        return $this->ratingRepository->findTopRatedAlbums();
+    }
+
+    /**
+     * Find the tag by id.
+     *
+     * @param int $id The tag id
+     *
+     * @return Tag Tag by the given id
+     */
+    public function getTagById(int $id): Tag
+    {
+        $tag = $this->tagRepository->find($id);
+
+        if (!$tag) {
+            throw new \InvalidArgumentException($this->translator->trans('message.tagdoesnotexist'));
+        }
+
+        return $tag;
     }
 }

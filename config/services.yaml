@@ -6,14 +6,10 @@
 parameters:
     covers_directory: '%kernel.project_dir%/public/uploads/covers'
 services:
-    App\Service\RegistrationServiceInterface:
-        class: App\Service\RegistrationService
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@form.factory'
-            - '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
-            - '@Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface'
-
+    App\Service\:
+        resource: '../src/Service/'
+        autowire: true
+        autoconfigure: true
     App\DataFixtures\:
         resource: '../src/DataFixtures'
         tags: [ 'doctrine.fixture.orm' ]

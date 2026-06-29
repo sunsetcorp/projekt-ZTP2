@@ -590,6 +590,11 @@
                                                 <target>This does not exist.</target>
                                             </trans-unit>
 
+                                            <trans-unit id='message.tagdoesnotexist'>
+                                                <source>message.tagdoesnotexist</source>
+                                                <target>This tag does not exist.</target>
+                                            </trans-unit>
+
 
 
                                           </body>

@@ -9,8 +9,8 @@
 
 {% if is_granted('ROLE_ADMIN') %}
     <div class="d-flex justify-content-center mt-3">
-        {% if album.cover %}
-            <a href="{{ path('cover_edit', {id: album.cover.id}) }}"
+        {% if cover %}
+            <a href="{{ path('cover_edit', {id: cover.id}) }}"
                class="btn btn-secondary">
                 {{ 'action.editcover'|trans }}
             </a>

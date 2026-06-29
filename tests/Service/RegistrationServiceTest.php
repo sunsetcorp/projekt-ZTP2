@@ -95,7 +95,6 @@ class RegistrationServiceTest extends KernelTestCase
             ->method('authenticateUser');
 
         $service = new RegistrationService(
-            $this->entityManager,
             $formFactory,
             $passwordHasher,
             $userAuthenticator,
@@ -149,7 +148,6 @@ class RegistrationServiceTest extends KernelTestCase
             ->willReturn($form);
 
         $service = new RegistrationService(
-            $this->entityManager,
             $formFactory,
             static::getContainer()->get(UserPasswordHasherInterface::class),
             $this->createMock(UserAuthenticatorInterface::class),
@@ -221,7 +219,6 @@ class RegistrationServiceTest extends KernelTestCase
             ->willThrowException(new \RuntimeException('duplicate'));
 
         $service = new RegistrationService(
-            $this->entityManager,
             $formFactory,
             $passwordHasher,
             $userAuthenticator,

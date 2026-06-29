@@ -6,11 +6,13 @@
 
 namespace App\Tests\DataFixtures;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 /**
  * Class UserFixturesTest.
@@ -37,6 +39,11 @@ class UserFixturesTest extends KernelTestCase
 
         $loader = new Loader();
         $loader->addFixture($fixtures);
+
+
+        $purger = new ORMPurger($this->entityManager);
+        $executor = new ORMExecutor($this->entityManager, $purger);
+        $executor->execute($loader->getFixtures());
     }
 
     /**
@@ -44,11 +51,7 @@ class UserFixturesTest extends KernelTestCase
      */
     public function testFixturesLoad(): void
     {
-
-        $em = self::getContainer()->get('doctrine')->getManager();
-
-        $users = $em->getRepository(User::class)->findAll();
-
+        $users = $this->entityManager->getRepository(User::class)->findAll();
         $this->assertGreaterThanOrEqual(13, count($users));
     }
 }

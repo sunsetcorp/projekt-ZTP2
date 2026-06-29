@@ -10,12 +10,8 @@ use App\Service\AlbumService;
 use App\Form\Type\AlbumType;
 use App\Entity\Album;
 use App\Entity\Comment;
-use App\Repository\TagRepository;
+use App\Entity\User;
 use App\Form\Type\CommentType;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\CommentRepository;
-use App\Repository\AlbumRepository;
-use App\Repository\RatingRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,25 +30,23 @@ class AlbumController extends AbstractController
     /**
      * Constructor.
      *
-     * @param EntityManagerInterface $entityManager The entity manager
-     * @param AlbumService           $albumService  The album service
-     * @param TranslatorInterface    $translator    The translator
+     * @param AlbumService        $albumService The album service
+     * @param TranslatorInterface $translator   The translator
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly AlbumService $albumService, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly AlbumService $albumService, private readonly TranslatorInterface $translator)
     {
     }
 
     /**
      * Index action.
      *
-     * @param AlbumRepository    $albumRepository Album repository
-     * @param PaginatorInterface $paginator       Paginator
-     * @param Request            $request         HTTP request
+     * @param PaginatorInterface $paginator Paginator
+     * @param Request            $request   HTTP request
      *
      * @return Response HTTP response
      */
     #[Route('/', name: 'album_index', methods: ['GET'])]
-    public function index(AlbumRepository $albumRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $phrase = $request->query->get('phrase');
         $page = $request->query->getInt('page', 1);
@@ -69,17 +63,18 @@ class AlbumController extends AbstractController
     /**
      * Remove favorite action.
      *
-     * @param int      $id       Album ID
-     * @param Security $security Security component
+     * @param int $id Album ID
      *
      * @return Response HTTP response
      *
      * */
     #[Route('/album/{id}/remove-favorite', name: 'remove_favorite')]
-    public function removeFavorite(int $id, Security $security): Response
+    public function removeFavorite(int $id): Response
     {
         $user = $this->getUser();
-
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
         if ($user?->isBlocked()) {
             $this->addFlash(
                 'danger',
@@ -88,7 +83,6 @@ class AlbumController extends AbstractController
 
             return $this->redirectToRoute('album_show', ['id' => $id]);
         }
-        $user = $security->getUser();
 
         try {
             $this->albumService->removeFavorite($id, $user);
@@ -103,43 +97,41 @@ class AlbumController extends AbstractController
     /**
      * Albums by tag action.
      *
-     * @param int             $id              Tag ID
-     * @param AlbumRepository $albumRepository Album repository
-     * @param TagRepository   $tagRepository   Tag repository
+     * @param int $id Tag ID
      *
      * @return Response HTTP response
      * */
     #[Route('/albums/tag/{id}', name: 'album_by_tag', methods: ['GET'])]
-    public function albumsByTag(int $id, AlbumRepository $albumRepository, TagRepository $tagRepository): Response
+    public function albumsByTag(int $id): Response
     {
-        $tag = $tagRepository->find($id);
-
-        if (!$tag) {
-            throw $this->createNotFoundException('The tag does not exist');
+        try {
+            $tag = $this->albumService->getTagById($id);
+        } catch (\InvalidArgumentException) {
+            throw $this->createNotFoundException($this->translator->trans('message.tagdoesnotexist'));
         }
-
-        $albums = $this->albumService->getAlbumsByTag($tag);
 
         return $this->render('album/by_tag.html.twig', [
             'tag' => $tag,
-            'albums' => $albums,
+            'albums' => $this->albumService->getAlbumsByTag($tag),
         ]);
     }
 
     /**
      * Favorite action.
      *
-     * @param int                    $id       Album ID
-     * @param EntityManagerInterface $em       Entity manager
-     * @param Security               $security Security component
+     * @param int      $id       Album ID
+     * @param Security $security Security component
      *
      * @return Response HTTP response
      *
      * */
     #[Route('/album/{id}/favorite', name: 'favorite_album', methods: ['POST'])]
-    public function favorite(int $id, EntityManagerInterface $em, Security $security): Response
+    public function favorite(int $id, Security $security): Response
     {
         $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
         if ($user?->isBlocked()) {
             $this->addFlash(
@@ -150,27 +142,16 @@ class AlbumController extends AbstractController
             return $this->redirectToRoute('album_show', ['id' => $id]);
         }
 
-        $user = $security->getUser();
-        $album = $em->getRepository(Album::class)->find($id);
+        $result = $this->albumService->toggleFavoriteById($id, $user);
+        $this->addFlash('success', $this->translator->trans($result));
 
-        if (!$album) {
-            throw $this->createNotFoundException('The album does not exist');
-        }
-        $this->albumService->toggleFavorite($album, $user);
-
-        $message = $user->getFavorites()->contains($album) ? 'message.addedFav' : 'message.removedFav';
-        $this->addFlash('success', $this->translator->trans($message));
-
-        return $this->redirectToRoute('album_show', ['id' => $album->getId()]);
+        return $this->redirectToRoute('album_show', ['id' =>  $id]);
     }
 
     /**
      * Show action.
      *
-     * @param Album                  $album             Album entity
-     * @param CommentRepository      $commentRepository Comment repository
-     * @param RatingRepository       $ratingRepository  Rating repository
-     * @param EntityManagerInterface $em                Entity manager
+     * @param Album $album Album entity
      *
      * @return Response HTTP response
      */
@@ -181,40 +162,19 @@ class AlbumController extends AbstractController
         methods: 'GET',
     )]
     #[IsGranted('VIEW', subject: 'album')]
-    public function show(Album $album, CommentRepository $commentRepository, RatingRepository $ratingRepository, EntityManagerInterface $em): Response
+    public function show(Album $album): Response
     {
+        $album = $this->albumService->getDetailedAlbum($album);
         $commentForm = $this->createForm(CommentType::class, new Comment());
-
-        $album = $em->createQueryBuilder()
-            ->select('a', 'author', 'category', 'covers', 'tags')
-            ->from(Album::class, 'a')
-            ->leftJoin('a.author', 'author')
-            ->leftJoin('a.category', 'category')
-            ->leftJoin('a.covers', 'covers')
-            ->leftJoin('a.tags', 'tags')
-            ->where('a = :album')
-            ->setParameter('album', $album)
-            ->getQuery()
-            ->getSingleResult();
-
         $user = $this->getUser();
-
-        $userRating = null;
-        if ($user) {
-            $rating = $ratingRepository->findOneBy([
-                'album' => $album,
-                'user' => $user,
-            ]);
-
-            $userRating = $rating?->getValue();
-        }
 
         return $this->render('album/show.html.twig', [
             'album' => $album,
+            'cover' => $this->albumService->getCover($album),
             'comment_form' => $commentForm->createView(),
-            'comments' => $commentRepository->findBy(['album' => $album]),
-            'averageRating' => $ratingRepository->getAverageForAlbum($album),
-            'userRating' => $userRating,
+            'comments' => $this->albumService->getComments($album),
+            'averageRating' => $this->albumService->getAverageRating($album),
+            'userRating' => $this->albumService->getUserRating($album, $user),
         ]);
     }
 
@@ -232,7 +192,7 @@ class AlbumController extends AbstractController
     public function create(Request $request): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('No access for you!');
+            throw $this->createAccessDeniedException($this->translator->trans('message.accessdenied'));
         }
         $this->denyAccessUnlessGranted('NOT_BLOCKED');
         $user = $this->getUser();
@@ -268,7 +228,7 @@ class AlbumController extends AbstractController
     public function edit(Request $request, Album $album): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('No access for you!');
+            throw $this->createAccessDeniedException($this->translator->trans('message.accessdenied'));
         }
         $this->denyAccessUnlessGranted('NOT_BLOCKED');
 
@@ -291,6 +251,7 @@ class AlbumController extends AbstractController
             [
                 'form' => $form->createView(),
                 'album' => $album,
+                'cover' => $this->albumService->getCover($album),
             ]
         );
     }
@@ -308,7 +269,7 @@ class AlbumController extends AbstractController
     public function delete(Request $request, Album $album): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('No access for you!');
+            throw $this->createAccessDeniedException($this->translator->trans('message.accessdenied'));
         }
 
         $this->denyAccessUnlessGranted('NOT_BLOCKED');
@@ -345,15 +306,13 @@ class AlbumController extends AbstractController
     /**
      * Show top-rated Albums.
      *
-     * @param RatingRepository $ratingRepository Rating repository
-     *
      * @return Response HTTP response
      */
     #[Route('/top-rated', name: 'top_rated')]
-    public function topRated(RatingRepository $ratingRepository): Response
+    public function topRated(): Response
     {
 
-        $albums = $ratingRepository->findTopRatedAlbums();
+        $albums = $this->albumService->getTopRatedAlbums();
 
         return $this->render('album/top-rated.html.twig', [
             'albums' => $albums,

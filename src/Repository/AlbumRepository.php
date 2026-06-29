@@ -9,6 +9,7 @@ namespace App\Repository;
 use App\Entity\Album;
 use App\Entity\Category;
 use App\Entity\Tag;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -119,5 +120,46 @@ class AlbumRepository extends ServiceEntityRepository
 
         $em->remove($album);
         $em->flush();
+    }
+
+    /**
+     * Save favourite changes.
+     *
+     * @param User $user User
+     */
+    public function saveUser(User $user): void
+    {
+        $em = $this->getEntityManager();
+
+        $em->persist($user);
+        $em->flush();
+    }
+
+    /**
+     * Flush changes.
+     */
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Find album details.
+     *
+     * @param Album $album The album
+     *
+     * @return Album The album details
+     */
+    public function findDetailedAlbum(Album $album): Album
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a', 'author', 'category', 'tags')
+            ->leftJoin('a.author', 'author')
+            ->leftJoin('a.category', 'category')
+            ->leftJoin('a.tags', 'tags')
+            ->where('a = :album')
+            ->setParameter('album', $album)
+            ->getQuery()
+            ->getSingleResult();
     }
 }

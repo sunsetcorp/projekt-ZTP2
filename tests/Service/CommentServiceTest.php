@@ -122,4 +122,47 @@ class CommentServiceTest extends KernelTestCase
 
         $this->assertNull($deleted);
     }
+
+    /**
+     * Returns all comments belonging to an album.
+     */
+    public function testGetCommentsByAlbumReturnsComments(): void
+    {
+        $em = self::getContainer()->get('doctrine')->getManager();
+        $service = self::getContainer()->get(CommentService::class);
+
+        $user = new User();
+        $user->setUsername('testuser');
+        $user->setEmail('author@test.com');
+        $user->setPassword('test');
+        $em->persist($user);
+
+        $album = new Album();
+        $album->setTitle('Test Album');
+        $album->setArtist('Artist');
+        $album->setReleaseDate(new \DateTime());
+        $album->setAuthor($user);
+        $em->persist($album);
+
+        $comment1 = new Comment();
+        $comment1->setContent('Comment 1');
+        $comment1->setCreatedAt(new \DateTimeImmutable());
+        $comment1->setAuthor($user);
+        $comment1->setAlbum($album);
+        $em->persist($comment1);
+
+        $comment2 = new Comment();
+        $comment2->setContent('Comment 2');
+        $comment2->setCreatedAt(new \DateTimeImmutable());
+        $comment2->setAuthor($user);
+        $comment2->setAlbum($album);
+        $em->persist($comment2);
+
+        $em->flush();
+
+        $result = $service->getCommentsByAlbum($album);
+
+        $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+    }
 }

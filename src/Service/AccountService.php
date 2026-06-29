@@ -14,7 +14,6 @@ use App\Entity\User;
 use App\Form\Type\AccountType;
 use App\Repository\UserRepository;
 use App\Repository\AdminRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +30,6 @@ class AccountService implements AccountServiceInterface
     /**
      * Constructor.
      *
-     * @param EntityManagerInterface      $entityManager   The entity manager interface
      * @param UserPasswordHasherInterface $passwordHasher  The password hasher interface
      * @param Security                    $security        The security component for accessing the current user
      * @param FormFactoryInterface        $formFactory     The form factory interface
@@ -40,7 +38,7 @@ class AccountService implements AccountServiceInterface
      * @param Admin                       $adminRepository Admin Repository
      * @param TranslatorInterface         $translator      The translator
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly UserPasswordHasherInterface $passwordHasher, private readonly Security $security, private readonly FormFactoryInterface $formFactory, private readonly Environment $twig, private readonly UserRepository $userRepository, private readonly AdminRepository $adminRepository, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly Security $security, private readonly FormFactoryInterface $formFactory, private readonly Environment $twig, private readonly UserRepository $userRepository, private readonly AdminRepository $adminRepository, private readonly TranslatorInterface $translator)
     {
     }
 

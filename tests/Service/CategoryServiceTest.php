@@ -173,4 +173,35 @@ class CategoryServiceTest extends KernelTestCase
             $category->getUpdatedAt()->getTimestamp()
         );
     }
+
+    /**
+     * Tests that all categories are returned as an array.
+     */
+    public function testGetAllCategories(): void
+    {
+        $category1 = new Category();
+        $category1->setTitle('Rock');
+
+        $category2 = new Category();
+        $category2->setTitle('Jazz');
+
+        $this->entityManager->persist($category1);
+        $this->entityManager->persist($category2);
+        $this->entityManager->flush();
+
+        $categories = $this->categoryService->getAllCategories();
+
+        $this->assertIsArray($categories);
+        $this->assertGreaterThanOrEqual(2, count($categories));
+    }
+
+    /**
+     * Tests that getCategoryWithAlbums throws InvalidArgumentException when the category does not exist.
+     */
+    public function testGetCategoryWithAlbumsThrowsExceptionWhenCategoryNotFound(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->categoryService->getCategoryWithAlbums(999999);
+    }
 }

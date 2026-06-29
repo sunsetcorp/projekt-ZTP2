@@ -6,10 +6,13 @@
 
 namespace App\Tests\Service;
 
+use PHPUnit\Framework\MockObject\Exception;
 use App\Entity\Album;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Service\AlbumService;
+use App\Repository\AlbumRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -207,6 +210,54 @@ class AlbumServiceTest extends KernelTestCase
         $this->albumService->toggleFavorite($album, $user);
 
         $this->assertFalse($user->getFavorites()->contains($album));
+    }
+
+    /**
+     * Tests that an existing favorite album is removed when toggling by id.
+     */
+    public function testToggleFavoriteByIdRemovesExistingFavorite(): void
+    {
+        $user = $this->createUser();
+
+        $album = new Album();
+        $album->setTitle('Test');
+        $album->setArtist('Artist');
+        $album->setReleaseDate(new \DateTime());
+        $album->setAuthor($user);
+
+        $this->entityManager->persist($album);
+        $this->entityManager->flush();
+
+        $user->addFavorite($album);
+        $this->entityManager->flush();
+
+        $this->assertTrue($user->getFavorites()->contains($album));
+
+        $this->albumService->toggleFavoriteById($album->getId(), $user);
+
+        $this->assertFalse($user->getFavorites()->contains($album));
+    }
+
+    /**
+     * Tests that toggleFavoriteById throws InvalidArgumentException when album is not found.
+     *
+     * @throws Exception
+     */
+    public function testToggleFavoriteByIdThrowsIfAlbumMissing(): void
+    {
+        $albumRepository = $this->createMock(AlbumRepository::class);
+        $albumRepository->method('find')->willReturn(null);
+
+        $albumService = $this->createMock(AlbumService::class);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturn('not found');
+
+        $service = self::getContainer()->get(AlbumService::class);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $service->toggleFavoriteById(999, new User());
     }
 
     /**

@@ -19,7 +19,10 @@
         <source>label.actions</source>
         <target>Działania</target>
       </trans-unit>
-
+                                            <trans-unit id='message.tagdoesnotexist'>
+                                                <source>message.tagdoesnotexist</source>
+                                                <target>Ten tag nie istnieje.</target>
+                                            </trans-unit>
                   <trans-unit id="message.successfullyrated">
                     <source>message.successfullyrated</source>
                     <target>Oceniono pozycję z powodzeniem.</target>

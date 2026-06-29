@@ -46,10 +46,10 @@ class CoverController extends AbstractController
     #[Route('/cover/create/{id}', name: 'cover_create', methods: ['GET', 'POST'])]
     public function create(Request $request, Album $album): Response
     {
-        /** @var Album $album */
-        if ($album->getCover()) {
-            return $this->redirectToRoute('cover_create', [
-                'id' => $album->getId(),
+        $existingCover = $this->coverService->findByAlbum($album);
+        if ($existingCover) {
+            return $this->redirectToRoute('cover_edit', [
+                'id' => $existingCover->getId(),
             ]);
         }
 
@@ -58,7 +58,6 @@ class CoverController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
             $this->coverService->create($file, $cover, $album);
 
@@ -101,11 +100,6 @@ class CoverController extends AbstractController
     {
         /** @var Album $album */
         $album = $cover->getAlbum();
-        if (!$album->getCover()) {
-            return $this->redirectToRoute('cover_create', [
-                'id' => $album->getId(),
-            ]);
-        }
 
         $form = $this->createForm(
             CoverType::class,

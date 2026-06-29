@@ -10,7 +10,6 @@ use App\Entity\Album;
 use App\Entity\User;
 use App\Entity\Rating;
 use App\Repository\RatingRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class RatingService.
@@ -22,10 +21,9 @@ class RatingService implements RatingServiceInterface
     /**
      * RegistrationService constructor.
      *
-     * @param RatingRepository       $ratingRepository The rating repository
-     * @param EntityManagerInterface $em               The entity manager
+     * @param RatingRepository $ratingRepository The rating repository
      */
-    public function __construct(private readonly RatingRepository $ratingRepository, private readonly EntityManagerInterface $em)
+    public function __construct(private readonly RatingRepository $ratingRepository)
     {
     }
 
@@ -51,7 +49,6 @@ class RatingService implements RatingServiceInterface
 
         $rating->setValue($value);
 
-        $this->em->persist($rating);
-        $this->em->flush();
+        $this->ratingRepository->save($rating);
     }
 }

@@ -9,7 +9,7 @@ namespace App\Service;
 use App\Repository\CategoryRepository;
 use App\Repository\AlbumRepository;
 use App\Entity\Category;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
@@ -23,12 +23,12 @@ class CategoryService implements CategoryServiceInterface
     /**
      * CategoryService constructor.
      *
-     * @param EntityManagerInterface $entityManager      The entity manager
-     * @param AlbumRepository        $albumRepository    The album repository
-     * @param PaginatorInterface     $paginator          The paginator
-     * @param CategoryRepository     $categoryRepository The category repository
+     * @param AlbumRepository     $albumRepository    The album repository
+     * @param PaginatorInterface  $paginator          The paginator
+     * @param CategoryRepository  $categoryRepository The category repository
+     * @param TranslatorInterface $translator         The translator
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly AlbumRepository $albumRepository, private readonly PaginatorInterface $paginator, private readonly CategoryRepository $categoryRepository)
+    public function __construct(private readonly AlbumRepository $albumRepository, private readonly PaginatorInterface $paginator, private readonly CategoryRepository $categoryRepository, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -85,5 +85,38 @@ class CategoryService implements CategoryServiceInterface
     public function canBeDeleted(Category $category): bool
     {
         return $this->categoryRepository->canBeDeleted($category);
+    }
+
+    /**
+     * Get albums that belong in given category.
+     *
+     * @param int $id The id of the category
+     *
+     * @return array Array of albums in category
+     */
+    public function getCategoryWithAlbums(int $id): array
+    {
+        $category = $this->categoryRepository->find($id);
+
+        if (!$category) {
+            throw new \InvalidArgumentException($this->translator->trans('message.category_not_found'));
+        }
+
+        $albums = $this->albumRepository->findBy(['category' => $category]);
+
+        return [
+            'category' => $category,
+            'albums' => $albums,
+        ];
+    }
+
+    /**
+     * Get all categories.
+     *
+     * @return array Array of categories
+     */
+    public function getAllCategories(): array
+    {
+        return $this->categoryRepository->findAll();
     }
 }

@@ -7,6 +7,7 @@
 namespace App\Service;
 
 use App\Entity\Comment;
+use App\Entity\Album;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -45,5 +46,17 @@ class CommentService implements CommentServiceInterface
     public function remove(Comment $comment): void
     {
         $this->commentRepository->remove($comment, true);
+    }
+
+    /**
+     * Get comments for album page.
+     *
+     * @param Album $album The album
+     *
+     * @return array Array of comments
+     */
+    public function getCommentsByAlbum(Album $album): array
+    {
+        return $this->commentRepository->findBy(['album' => $album]);
     }
 }

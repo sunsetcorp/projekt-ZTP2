@@ -1,7 +1,7 @@
 
-Found 0 of 77 files that can be fixed in 2.658 seconds, 182.00 MB memory used
+Found 0 of 77 files that can be fixed in 2.287 seconds, 182.00 MB memory used
 
-Found 0 of 35 files that can be fixed in 3.096 seconds, 102.00 MB memory used
+Found 0 of 35 files that can be fixed in 2.057 seconds, 102.00 MB memory used
  ------- -------- ---- ---------------------- -------------------------------- 
  [32m State [39m [32m Domain [39m [32m Id [39m [32m Message Preview (en) [39m [32m Fallback Message Preview (eng) [39m 
  ------- -------- ---- ---------------------- -------------------------------- 
@@ -10,13 +10,12 @@ Found 0 of 35 files that can be fixed in 3.096 seconds, 102.00 MB memory used
  [32m State [39m [32m Domain [39m [32m Id [39m [32m Message Preview (pl) [39m [32m Fallback Message Preview (eng) [39m 
  ------- -------- ---- ---------------------- -------------------------------- 
 
-[32m[notice] Migrating up to DoctrineMigrations\Version20260626060816[39m
-[32m[notice] finished in 1645.4ms, used 26M memory, 2 migrations executed, 23 sql queries[39m
+[32m[notice] Migrating up to DoctrineMigrations\Version20260629134934[39m
+[32m[notice] finished in 1315.7ms, used 26M memory, 1 migrations executed, 21 sql queries[39m
 
-[30;42m                                                                               [39;49m
-[30;42m [OK] Successfully migrated to version:                                        [39;49m
-[30;42m      DoctrineMigrations\Version20260626060816                                 [39;49m
-[30;42m                                                                               [39;49m
+[30;42m                                                                                                                        [39;49m
+[30;42m [OK] Successfully migrated to version: DoctrineMigrations\Version20260629134934                                        [39;49m
+[30;42m                                                                                                                        [39;49m
 
 
    [33m>[39m [32mpurging database[39m

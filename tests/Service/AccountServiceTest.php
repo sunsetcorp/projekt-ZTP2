@@ -51,7 +51,6 @@ class AccountServiceTest extends KernelTestCase
         $this->entityManager = $container->get('doctrine.orm.entity_manager');
 
         $this->accountService = new AccountService(
-            $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $this->createMock(Security::class),
             $this->createMock(FormFactoryInterface::class),
@@ -75,7 +74,6 @@ class AccountServiceTest extends KernelTestCase
             ->willReturn($expectedUser);
 
         $service = new AccountService(
-            $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $security,
             $this->createMock(FormFactoryInterface::class),
@@ -113,7 +111,6 @@ class AccountServiceTest extends KernelTestCase
             ->willReturn('account page');
 
         $service = new AccountService(
-            $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $security,
             $this->createMock(FormFactoryInterface::class),
@@ -139,7 +136,6 @@ class AccountServiceTest extends KernelTestCase
         $security->method('getUser')
             ->willReturn(null);
         $service = new AccountService(
-            $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $security,
             $this->createMock(FormFactoryInterface::class),
@@ -219,7 +215,6 @@ class AccountServiceTest extends KernelTestCase
             ->with($user);
 
         $service = new AccountService(
-            $this->entityManager,
             $passwordHasher,
             $security,
             $formFactory,
@@ -291,7 +286,6 @@ class AccountServiceTest extends KernelTestCase
             ->willReturn(0);
 
         $service = new AccountService(
-            $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $security,
             $formFactory,
@@ -333,7 +327,6 @@ class AccountServiceTest extends KernelTestCase
         $twig = $this->createMock(Environment::class);
 
         $service = new AccountService(
-            $this->entityManager,
             $this->createMock(UserPasswordHasherInterface::class),
             $security,
             $formFactory,

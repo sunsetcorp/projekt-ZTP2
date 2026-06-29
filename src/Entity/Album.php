@@ -54,8 +54,6 @@ class Album
     /**
      * Release date.
      *
-     * @var DATE_MUTABLE|null
-     *
      * @psalm-suppress PropertyNotSetInConstructor
      */
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -94,17 +92,16 @@ class Album
 
     /**
      * Cover.
-     */
-    #[ORM\OneToMany(mappedBy: 'album', targetEntity: Cover::class, fetch: 'EXTRA_LAZY')]
-    private Collection $covers;
-
-    /**
+     *
+     * #[ORM\OneToOne(mappedBy: 'album', cascade: ['persist', 'remove'], fetch:'EXTRA_LAZY')]
+     * private ?Cover $cover = null;/**
+     *
+     * /**
      * Album constructor.
      */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-        $this->covers = new ArrayCollection();
     }
 
     /**
@@ -142,13 +139,13 @@ class Album
     }
 
     /**
-     * Setter for Title.
+     *  Setter for Title.
      *
-     * @param string|null $title
+     * @param string|null $title The title
      *
      * @return static returns the instance of the current class
      */
-    public function setTitle(string $title): static
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
 
@@ -168,11 +165,11 @@ class Album
     /**
      * Setter for Artist.
      *
-     * @param string|null $artist
+     * @param string|null $artist The artist
      *
      * @return static returns the instance of the current class
      */
-    public function setArtist(string $artist): static
+    public function setArtist(?string $artist): static
     {
         $this->artist = $artist;
 
@@ -182,7 +179,7 @@ class Album
     /**
      * Getter for Release date.
      *
-     * @return DateTimeInterface|null Release date
+     * @return \DateTimeInterface|null Release date
      */
     public function getReleaseDate(): ?\DateTimeInterface
     {
@@ -311,46 +308,6 @@ class Album
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Getter for Users who favorited this album.
-     *
-     * @var Collection<int, User>
-     *
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    /**
-     * Getter for cover.
-     *
-     * @return Cover|null the cover of the album
-     */
-    public function getCover(): ?Cover
-    {
-        return $this->covers->first() ?: null;
-    }
-
-    /**
-     * Setter for Cover.
-     *
-     * @param Cover|null $cover the cover of the album
-     *
-     * @return static returns the instance of the current class
-     */
-    public function setCover(?Cover $cover): self
-    {
-        $this->covers->clear();
-        if (null !== $cover) {
-            $this->covers->add($cover);
-            $cover->setAlbum($this);
-        }
 
         return $this;
     }

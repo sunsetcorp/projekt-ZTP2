@@ -108,9 +108,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for email.
      *
-     * @param string $email Email
+     * @param string|null $email Email
      */
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
@@ -177,11 +177,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for password.
      *
-     * @param string $password User password
+     * @param string|null $password User password
      *
      * @return $this
      */
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -237,11 +237,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the username for the user.
      *
-     * @param string $username Username to set
+     * @param string|null $username Username to set
      *
      * @return $this
      */
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 

@@ -7,7 +7,7 @@
 namespace App\Command;
 
 use App\Entity\Album;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AlbumRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,9 +28,9 @@ class GenerateAlbumSlugsCommand extends Command
     /**
      * Constructor for GenerateAlbumSlugsCommand.
      *
-     * @param EntityManagerInterface $entityManager The entity manager
+     * @param AlbumRepository $albumRepository The album repository
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private readonly AlbumRepository $albumRepository)
     {
         parent::__construct();
     }
@@ -46,14 +46,12 @@ class GenerateAlbumSlugsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $albumRepository = $this->entityManager->getRepository(Album::class);
-        $albums = $albumRepository->findAll();
+        $albums = $this->albumRepository->findAll();
         foreach ($albums as $album) {
             $album->setSlug((string) $album->getTitle());
-            $this->entityManager->persist($album);
         }
 
-        $this->entityManager->flush();
+        $this->albumRepository->flush();
         $io->success('Slugs have been generated for all albums.');
 
         return Command::SUCCESS;

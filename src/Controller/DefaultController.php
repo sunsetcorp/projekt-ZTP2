@@ -7,7 +7,7 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\CategoryRepository;
+use App\Service\CategoryServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,20 +17,23 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends AbstractController
 {
     /**
+     * @param CategoryServiceInterface $categoryService The category service interface
+     */
+    public function __construct(private readonly CategoryServiceInterface $categoryService)
+    {
+    }
+
+    /**
      * Renders the homepage.
-     *
-     * @param CategoryRepository $categoryRepository The category repository
      *
      * @return Response HTTP response
      *
      * */
     #[Route('/', name: 'homepage')]
-    public function index(CategoryRepository $categoryRepository): Response
+    public function index(): Response
     {
-        $categories = $categoryRepository->findAll();
-
         return $this->render('base.html.twig', [
-            'categories' => $categories,
+            'categories' => $this->categoryService->getAllCategories(),
         ]);
     }
 }

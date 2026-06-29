@@ -11,7 +11,6 @@ use App\Entity\Album;
 use App\Entity\Comment;
 use App\Form\Type\CommentDeleteType;
 use App\Form\Type\CommentType;
-use App\Repository\CommentRepository;
 use App\Service\CommentServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,11 +26,10 @@ class CommentController extends AbstractController
     /**
      * Constructor.
      *
-     * @param CommentServiceInterface $commentService    The comment service
-     * @param CommentRepository       $commentRepository The comment repository
-     * @param TranslatorInterface     $translator        The translator
+     * @param CommentServiceInterface $commentService The comment service
+     * @param TranslatorInterface     $translator     The translator
      */
-    public function __construct(private readonly CommentServiceInterface $commentService, private readonly CommentRepository $commentRepository, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly CommentServiceInterface $commentService, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -84,7 +82,7 @@ class CommentController extends AbstractController
         return $this->render('album/show.html.twig', [
             'album' => $album,
             'comment_form' => $commentForm->createView(),
-            'comments' => $this->commentRepository->findBy(['album' => $album]),
+            'comments' => $this->commentService->getCommentsByAlbum($album),
         ]);
     }
 
